@@ -3,6 +3,7 @@
 #pragma hdrstop
 
 #include "NTFSFileSystem.h"
+#include <windows.h>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 
