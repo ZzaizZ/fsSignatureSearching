@@ -8,6 +8,7 @@
 #include <Vcl.StdCtrls.hpp>
 #include <Vcl.Forms.hpp>
 #include "VirtualTrees.hpp"
+#include "NTFSFileSystem.h"
 //---------------------------------------------------------------------------
 class TMainWindow : public TForm
 {
@@ -17,6 +18,8 @@ __published:	// IDE-managed Components
 	TButton *btnSearch;
 	TLabel *lblPath;
 	TCheckBox *CheckBox1;
+	TLabel *lblStatusBar;
+	void __fastcall btnSearchClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TMainWindow(TComponent* Owner);

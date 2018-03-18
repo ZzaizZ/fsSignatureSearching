@@ -2,7 +2,7 @@ object MainWindow: TMainWindow
   Left = 0
   Top = 0
   Caption = #1057#1080#1075#1085#1072#1090#1091#1088#1085#1099#1081' '#1087#1086#1080#1089#1082' '#1087#1086' '#1089#1077#1082#1090#1086#1088#1072#1084
-  ClientHeight = 536
+  ClientHeight = 560
   ClientWidth = 465
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,6 +20,13 @@ object MainWindow: TMainWindow
     Height = 13
     Caption = #1055#1091#1090#1100' '#1082' '#1091#1089#1090#1088#1086#1081#1089#1090#1074#1091
   end
+  object lblStatusBar: TLabel
+    Left = 24
+    Top = 528
+    Width = 417
+    Height = 13
+    Caption = 'lblStatusBar'
+  end
   object vstFindingSectors: TVirtualStringTree
     Left = 24
     Top = 96
@@ -36,7 +43,7 @@ object MainWindow: TMainWindow
     Width = 121
     Height = 21
     TabOrder = 1
-    Text = 'tedName'
+    Text = '\\.\C:'
   end
   object btnSearch: TButton
     Left = 24
@@ -45,6 +52,7 @@ object MainWindow: TMainWindow
     Height = 25
     Caption = #1055#1086#1080#1089#1082
     TabOrder = 2
+    OnClick = btnSearchClick
   end
   object CheckBox1: TCheckBox
     Left = 136

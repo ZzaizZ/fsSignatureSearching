@@ -2,12 +2,15 @@
 
 #ifndef NTFSFileSystemH
 #define NTFSFileSystemH
-//---------------------------------------------------------------------------
 #endif
+//---------------------------------------------------------------------------
+#include <windows.h>
+//---------------------------------------------------------------------------
+#pragma pack(push, 1)
 typedef struct
 {
   BYTE padding_1[3];
-  BYTE signature[8];
+  ULONGLONG signature;
   SHORT bytes_per_sector;
   BYTE sector_factor;
   BYTE padding_2[6];
@@ -17,27 +20,28 @@ typedef struct
   ULONGLONG mft_lcn;
   ULONGLONG mft_lcn_copy;
   BYTE clusters_per_mft;
-  BYTE padding_3[3];
-  BYTE clusters_per_index;
   BYTE padding_4[3];
+  BYTE clusters_per_index;
+  BYTE padding_5[3];
   ULONGLONG volume_serial_number;
-  BYTE padding_5;
+  BYTE padding_6;
   BYTE boot_code[426];
   SHORT end_of_bootrecord;
 
 } NTFS_BootRecord;
-
+#pragma pack(pop)
+//---------------------------------------------------------------------------
 class NTFSFileSystem
 {
 	private:
-        DWORD TotalClusters;
-		BYTE ClusterFactor;
-		DWORD BytesPerCluster;
+		DWORD total_clusters;
+		BYTE cluster_factor;
+		DWORD bytes_per_cluster;
+		NTFS_BootRecord *mbr;
+		int ReadSectors(HANDLE file_handle, ULONGLONG sector_offset, DWORD number_of_sectors, BYTE *data_buffer);
 	public:
-		NTFSFileSystem();
-		int Open(WCHAR *path);
-		int ReadClusters(ULONGLONG startCluster, DWORD numberOfClusters, BYTE *outBuffer);
-		DWORD TotalClusterNumber();
-        DWORD GetBytesPerCluster();
+		NTFSFileSystem(HANDLE file_handle);
+		~NTFSFileSystem();
+		int ReadClusters(HANDLE file_handle, ULONGLONG start_cluster, DWORD number_of_clusters, BYTE *data_buffer);
 };
 
