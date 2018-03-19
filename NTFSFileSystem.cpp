@@ -8,13 +8,14 @@
 
 NTFSFileSystem::NTFSFileSystem(HANDLE file_handle, DWORD *error_code)
 {
+    is_NTFS = false;
 	BYTE data_buffer[512];
 	*error_code = this->ReadBootRecord(file_handle, data_buffer);
 	mbr = (NTFS_BootRecord*)data_buffer;
-	int bytes_per_sector = (0x01 << mbr->bytes_per_sector);
-	int sector_per_cluster = (0x01 << mbr->sector_per_cluster);
+	int bytes_per_sector = ( mbr->bytes_per_sector);
+	int sector_per_cluster = (mbr->sector_per_cluster);
 	bytes_per_cluster = bytes_per_sector * sector_per_cluster;
-	bool is_NTFS = this->CheckNTFS();
+	is_NTFS = this->CheckNTFS();
 }
 
 NTFSFileSystem::~NTFSFileSystem()
@@ -51,7 +52,7 @@ DWORD NTFSFileSystem::ReadBootRecord(HANDLE file_handle, BYTE *data_buffer)
 ULONGLONG NTFSFileSystem::GetFSSignature()
 {
 	 if (this->CheckNTFS())
-		return (0x01 << mbr->signature);
+		return (mbr->sectors_by_volume / mbr->sector_per_cluster);
 	 else
         return 1234;
 }

@@ -21,7 +21,8 @@ __published:	// IDE-managed Components
 	TLabel *lblStatusBar;
 	void __fastcall btnSearchClick(TObject *Sender);
 private:	// User declarations
-    WCHAR sqlite_signature;
+	bool SearchBySignature(BYTE *sig, BYTE *buf);
+	BYTE *sqlite_signature;
 public:		// User declarations
 	__fastcall TMainWindow(TComponent* Owner);
 };
