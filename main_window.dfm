@@ -23,7 +23,7 @@ object MainWindow: TMainWindow
   object lblStatusBar: TLabel
     Left = 24
     Top = 528
-    Width = 417
+    Width = 57
     Height = 13
     Caption = 'lblStatusBar'
   end
@@ -54,7 +54,7 @@ object MainWindow: TMainWindow
     TabOrder = 2
     OnClick = btnSearchClick
   end
-  object CheckBox1: TCheckBox
+  object checkSqlite: TCheckBox
     Left = 136
     Top = 57
     Width = 49

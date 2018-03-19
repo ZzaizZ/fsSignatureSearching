@@ -13,24 +13,30 @@ TMainWindow *MainWindow;
 __fastcall TMainWindow::TMainWindow(TComponent* Owner)
 	: TForm(Owner)
 {
+	sqlite_signature = 0x53514C69746520666F726D6174203300;
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainWindow::btnSearchClick(TObject *Sender)
 {
 	WCHAR *path = tedName->Text.c_str();
 	lblStatusBar->Caption = path;
-	HANDLE file_handle = CreateFileW(path,
+	HANDLE file_handle;
+	file_handle = CreateFileW(path,
 					GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
 					NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL
 					);
 	if (file_handle == INVALID_HANDLE_VALUE)
 	{
-		lblStatusBar->Caption = "Ошибка при открытии файла"; // код ошибки открытия файла
+		WCHAR buf[50];
+		swprintf(buf, 50, L"Ошибка при открытии файла. Код ошибки: %x", GetLastError());
+		lblStatusBar->Caption = buf;
 	}
 	else
 	{
-        lblStatusBar->Caption = "OK";
-		NTFSFileSystem device(path);
+		lblStatusBar->Caption = "OK";
+		DWORD error_code;
+		NTFSFileSystem device(path, &error_code);
+        lblStatusBar->Caption = error_code;
 	}
     CloseHandle(file_handle);
 }

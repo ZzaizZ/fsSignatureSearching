@@ -12,7 +12,7 @@ typedef struct
   BYTE padding_1[3];
   ULONGLONG signature;
   SHORT bytes_per_sector;
-  BYTE sector_factor;
+  BYTE sector_per_cluster;
   BYTE padding_2[6];
   BYTE device_type;
   BYTE padding_3[18];
@@ -38,9 +38,10 @@ class NTFSFileSystem
 		BYTE cluster_factor;
 		DWORD bytes_per_cluster;
 		NTFS_BootRecord *mbr;
-		int ReadSectors(HANDLE file_handle, ULONGLONG sector_offset, DWORD number_of_sectors, BYTE *data_buffer);
+		DWORD ReadBootRecord(HANDLE file_handle, BYTE *data_buffer);
+        bool CheckNTFS();
 	public:
-		NTFSFileSystem(HANDLE file_handle);
+		NTFSFileSystem(HANDLE file_handle, DWORD *error_code);
 		~NTFSFileSystem();
 		int ReadClusters(HANDLE file_handle, ULONGLONG start_cluster, DWORD number_of_clusters, BYTE *data_buffer);
 };

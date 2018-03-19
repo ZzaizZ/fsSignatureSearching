@@ -17,10 +17,11 @@ __published:	// IDE-managed Components
 	TEdit *tedName;
 	TButton *btnSearch;
 	TLabel *lblPath;
-	TCheckBox *CheckBox1;
+	TCheckBox *checkSqlite;
 	TLabel *lblStatusBar;
 	void __fastcall btnSearchClick(TObject *Sender);
 private:	// User declarations
+    WCHAR sqlite_signature;
 public:		// User declarations
 	__fastcall TMainWindow(TComponent* Owner);
 };
