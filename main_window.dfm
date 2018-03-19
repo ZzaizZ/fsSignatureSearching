@@ -43,7 +43,7 @@ object MainWindow: TMainWindow
     Width = 121
     Height = 21
     TabOrder = 1
-    Text = '\\.\C:'
+    Text = '\\.\J:'
   end
   object btnSearch: TButton
     Left = 24

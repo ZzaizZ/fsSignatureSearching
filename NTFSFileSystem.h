@@ -43,6 +43,7 @@ class NTFSFileSystem
 	public:
 		NTFSFileSystem(HANDLE file_handle, DWORD *error_code);
 		~NTFSFileSystem();
+        ULONGLONG GetFSSignature();
 		int ReadClusters(HANDLE file_handle, ULONGLONG start_cluster, DWORD number_of_clusters, BYTE *data_buffer);
 };
 

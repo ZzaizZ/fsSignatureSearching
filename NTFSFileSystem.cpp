@@ -8,13 +8,13 @@
 
 NTFSFileSystem::NTFSFileSystem(HANDLE file_handle, DWORD *error_code)
 {
-	BYTE *data_buffer[512];
-	*error_code = this->ReadBootRecord(file_handle, *data_buffer);
+	BYTE data_buffer[512];
+	*error_code = this->ReadBootRecord(file_handle, data_buffer);
 	mbr = (NTFS_BootRecord*)data_buffer;
 	int bytes_per_sector = (0x01 << mbr->bytes_per_sector);
 	int sector_per_cluster = (0x01 << mbr->sector_per_cluster);
 	bytes_per_cluster = bytes_per_sector * sector_per_cluster;
-    bool is_NTFS = this->CheckNTFS();
+	bool is_NTFS = this->CheckNTFS();
 }
 
 NTFSFileSystem::~NTFSFileSystem()
@@ -34,18 +34,28 @@ DWORD NTFSFileSystem::ReadBootRecord(HANDLE file_handle, BYTE *data_buffer)
 		);
 	if(current_position != sector_offset.LowPart)
 	{
-		return GetLastError() + 1000; // (BUG!!!) некорректное позиционирование
+		return GetLastError() + 1000;
 	}
 	DWORD bytes_to_read = 512;
 	DWORD bytes_read;
 	bool read_result = ReadFile(file_handle, data_buffer, bytes_to_read, &bytes_read, NULL);
 	if(!read_result || bytes_read != bytes_to_read)
 	{
-		return GetLastError();
+		return GetLastError() + 10;
 	}
 
 	return GetLastError();
 }
+
+// ----> testing method
+ULONGLONG NTFSFileSystem::GetFSSignature()
+{
+	 if (this->CheckNTFS())
+		return (0x01 << mbr->signature);
+	 else
+        return 1234;
+}
+// <------- testing method
 
 int NTFSFileSystem::ReadClusters(HANDLE file_handle, ULONGLONG start_cluster, DWORD number_of_clusters, BYTE *data_buffer)
 {
@@ -61,7 +71,7 @@ int NTFSFileSystem::ReadClusters(HANDLE file_handle, ULONGLONG start_cluster, DW
 	{
 		return GetLastError()+2000;
 	}
-	DWORD bytes_to_read = 512;
+	DWORD bytes_to_read = number_of_clusters*bytes_per_cluster;
 	DWORD bytes_read;
 	bool read_result = ReadFile(file_handle, data_buffer, bytes_to_read, &bytes_read, NULL);
 	if(!read_result || bytes_read != bytes_to_read)
@@ -74,7 +84,7 @@ int NTFSFileSystem::ReadClusters(HANDLE file_handle, ULONGLONG start_cluster, DW
 
 bool NTFSFileSystem::CheckNTFS()
 {
-    if( mbr->signature != 0x202020205346544E ) //.quadPart?
+    if( mbr->signature != 0x202020205346544E )
 		return FALSE;
 	else
         return TRUE;
