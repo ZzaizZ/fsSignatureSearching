@@ -41,7 +41,7 @@ DWORD NTFSFileSystem::ReadBootRecord(HANDLE file_handle, BYTE *data_buffer)
 	bool read_result = ReadFile(file_handle, data_buffer, bytes_to_read, &bytes_read, NULL);
 	if(!read_result || bytes_read != bytes_to_read)
 	{
-		return GetLastError() + 10;
+		return GetLastError();
 	}
 
 	return GetLastError();

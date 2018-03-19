@@ -35,7 +35,7 @@ void __fastcall TMainWindow::btnSearchClick(TObject *Sender)
 	{
 		lblStatusBar->Caption = "OK";
 		DWORD error_code;
-		NTFSFileSystem device(path, &error_code);
+		NTFSFileSystem device(file_handle, &error_code);
         lblStatusBar->Caption = error_code;
 	}
     CloseHandle(file_handle);

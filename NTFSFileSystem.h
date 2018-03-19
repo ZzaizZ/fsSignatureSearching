@@ -39,7 +39,7 @@ class NTFSFileSystem
 		DWORD bytes_per_cluster;
 		NTFS_BootRecord *mbr;
 		DWORD ReadBootRecord(HANDLE file_handle, BYTE *data_buffer);
-        bool CheckNTFS();
+		bool CheckNTFS();
 	public:
 		NTFSFileSystem(HANDLE file_handle, DWORD *error_code);
 		~NTFSFileSystem();
