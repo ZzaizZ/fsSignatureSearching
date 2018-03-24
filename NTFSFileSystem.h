@@ -34,16 +34,20 @@ typedef struct
 class NTFSFileSystem
 {
 	private:
+		HANDLE file_handle;
+        WCHAR *path;
 		NTFS_BootRecord *mbr;
 		DWORD total_clusters;
 		DWORD bytes_per_cluster;
-		DWORD ReadBootRecord(HANDLE file_handle, BYTE *data_buffer);
+		bool is_NTFS;
+		DWORD ReadBootRecord(BYTE *data_buffer);
 		bool CheckNTFS();
-        bool is_NTFS;
 	public:
-		NTFSFileSystem(HANDLE file_handle, DWORD *error_code);
+		NTFSFileSystem(WCHAR *path);
+        NTFSFileSystem(WCHAR *path, WCHAR *error_message);
 		~NTFSFileSystem();
+        void Open(WCHAR *path);
         ULONGLONG GetFSSignature();
-		int ReadClusters(HANDLE file_handle, ULONGLONG start_cluster, DWORD number_of_clusters, BYTE *data_buffer);
+		int ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters, BYTE *data_buffer);
 };
 

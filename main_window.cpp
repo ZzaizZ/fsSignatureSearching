@@ -18,35 +18,11 @@ __fastcall TMainWindow::TMainWindow(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TMainWindow::btnSearchClick(TObject *Sender)
 {
-	WCHAR *path = tedName->Text.c_str();
-	lblStatusBar->Caption = path;
-	HANDLE file_handle;
-	file_handle = CreateFileW(path,
-					GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE,
-					NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL
-					);
-	if (file_handle == INVALID_HANDLE_VALUE)
-	{
-		WCHAR buf[50];
-		swprintf(buf, 50, L"Ошибка при открытии файла. Код ошибки: %x", GetLastError());
-		lblStatusBar->Caption = buf;
-	}
-	else
-	{
-		lblStatusBar->Caption = "OK";
-		DWORD error_code;
-		NTFSFileSystem device(file_handle, &error_code);
-		DWORD result;
-        BYTE buffer[4096];
-		result = device.ReadClusters(file_handle, (ULONGLONG)0, (DWORD)1, buffer);
-		bool found = this->SearchBySignature(sqlite_signature, buffer);
-		if (found)
-			lblStatusBar->Caption = "FOUND!";
-		else
-			lblStatusBar->Caption = sizeof(sqlite_signature)/sizeof(*sqlite_signature);
-		
-	}
-    CloseHandle(file_handle);
+	WCHAR *drive_path = tedName->Text.c_str();
+    WCHAR error_message[100];
+	lblStatusBar->Caption = drive_path;
+	NTFSFileSystem *drive = new NTFSFileSystem(drive_path, error_message);
+	lblStatusBar->Caption = error_message;
 }
 //---------------------------------------------------------------------------
 bool TMainWindow::SearchBySignature(BYTE *sig, BYTE *cluster_data)
@@ -68,5 +44,5 @@ bool TMainWindow::SearchBySignature(BYTE *sig, BYTE *cluster_data)
 	}
 	return true;
 }
-
+//---------------------------------------------------------------------------
 

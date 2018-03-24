@@ -3,26 +3,53 @@
 #pragma hdrstop
 
 #include "NTFSFileSystem.h"
+#include <stdio.h>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
-
-NTFSFileSystem::NTFSFileSystem(HANDLE file_handle, DWORD *error_code)
+//---------------------------------------------------------------------------
+NTFSFileSystem::NTFSFileSystem(WCHAR *drive_path, WCHAR *error_message)
 {
-    is_NTFS = false;
-	BYTE data_buffer[512];
-	*error_code = this->ReadBootRecord(file_handle, data_buffer);
-	mbr = (NTFS_BootRecord*)data_buffer;
-	int bytes_per_sector = ( mbr->bytes_per_sector);
-	int sector_per_cluster = (mbr->sector_per_cluster);
-	bytes_per_cluster = bytes_per_sector * sector_per_cluster;
-	is_NTFS = this->CheckNTFS();
+	this->file_handle = 0;
+	is_NTFS = false;
+	file_handle = CreateFile(L"\\\\.\\J:", GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (file_handle == INVALID_HANDLE_VALUE)
+	{
+		WCHAR buf[50];
+		swprintf_s (error_message, 100, L"Ошибка при открытии файла. Код ошибки: %x", GetLastError());
+	}
+	else
+	{
+		BYTE data_buffer[512];
+		DWORD error_code = ReadBootRecord(data_buffer);
+		mbr = (NTFS_BootRecord*)data_buffer;
+		int bytes_per_sector = ( mbr->bytes_per_sector);
+		int sector_per_cluster = (mbr->sector_per_cluster);
+		bytes_per_cluster = bytes_per_sector * sector_per_cluster;
+		is_NTFS = CheckNTFS();
+		if (!is_NTFS) {
+			swprintf_s(error_message, 100,L"На указанном диске не обранужено ФС NTFS");
+		}
+		else
+			swprintf_s(error_message, 100,L"Открыт диск с системой NTFS");
+	}
 }
 
+NTFSFileSystem::NTFSFileSystem(WCHAR *drive_path)
+{
+
+}
+//---------------------------------------------------------------------------
 NTFSFileSystem::~NTFSFileSystem()
 {
+    CloseHandle(file_handle);
+    delete file_handle;
 }
+void NTFSFileSystem::Open(WCHAR *path)
+{
 
-DWORD NTFSFileSystem::ReadBootRecord(HANDLE file_handle, BYTE *data_buffer)
+}
+//---------------------------------------------------------------------------
+DWORD NTFSFileSystem::ReadBootRecord(BYTE *data_buffer)
 {
 	ULONGLONG start_offset = 0;
 	LARGE_INTEGER sector_offset;
@@ -58,7 +85,7 @@ ULONGLONG NTFSFileSystem::GetFSSignature()
 }
 // <------- testing method
 
-int NTFSFileSystem::ReadClusters(HANDLE file_handle, ULONGLONG start_cluster, DWORD number_of_clusters, BYTE *data_buffer)
+int NTFSFileSystem::ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters, BYTE *data_buffer)
 {
 	ULONGLONG start_offset = start_cluster*bytes_per_cluster;
 	LARGE_INTEGER sector_offset;
@@ -82,7 +109,7 @@ int NTFSFileSystem::ReadClusters(HANDLE file_handle, ULONGLONG start_cluster, DW
 
 	return GetLastError();
 }
-
+//---------------------------------------------------------------------------
 bool NTFSFileSystem::CheckNTFS()
 {
     if( mbr->signature != 0x202020205346544E )
