@@ -19,10 +19,11 @@ __fastcall TMainWindow::TMainWindow(TComponent* Owner)
 void __fastcall TMainWindow::btnSearchClick(TObject *Sender)
 {
 	WCHAR *drive_path = tedName->Text.c_str();
-    WCHAR error_message[100];
+//    WCHAR error_message[100];
+	int error_code;
 	lblStatusBar->Caption = drive_path;
-	NTFSFileSystem *drive = new NTFSFileSystem(drive_path, error_message);
-	lblStatusBar->Caption = error_message;
+	NTFSFileSystem *drive = new NTFSFileSystem(drive_path, &error_code);
+	lblStatusBar->Caption = error_code;
 }
 //---------------------------------------------------------------------------
 bool TMainWindow::SearchBySignature(BYTE *sig, BYTE *cluster_data)

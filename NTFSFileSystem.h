@@ -43,11 +43,10 @@ class NTFSFileSystem
 		DWORD ReadBootRecord(BYTE *data_buffer);
 		bool CheckNTFS();
 	public:
-		NTFSFileSystem(WCHAR *path);
-        NTFSFileSystem(WCHAR *path, WCHAR *error_message);
+        NTFSFileSystem(WCHAR *path, int *error_code);
 		~NTFSFileSystem();
-        void Open(WCHAR *path);
-        ULONGLONG GetFSSignature();
+		ULONGLONG GetClustersCount();
+		DWORD GetBytesPerCluster();
 		int ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters, BYTE *data_buffer);
 };
 
