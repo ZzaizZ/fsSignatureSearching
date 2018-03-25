@@ -8,22 +8,29 @@
 #pragma package(smart_init)
 #pragma link "VirtualTrees"
 #pragma resource "*.dfm"
+typedef struct
+{
+    __int64 cluster_number;
+} EntryStruct;
+
 TMainWindow *MainWindow;
 //---------------------------------------------------------------------------
 __fastcall TMainWindow::TMainWindow(TComponent* Owner)
 	: TForm(Owner)
 {
 	sqlite_signature = "SQLite format 3";
+	pbSearchingStatus->Max = 100;
+    pbSearchingStatus->Position = 0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainWindow::btnSearchClick(TObject *Sender)
 {
 	WCHAR *drive_path = tedName->Text.c_str();
-//    WCHAR error_message[100];
 	int error_code;
 	lblStatusBar->Caption = drive_path;
-	NTFSFileSystem *drive = new NTFSFileSystem(drive_path, &error_code);
-	lblStatusBar->Caption = error_code;
+//	NTFSFileSystem *drive = new NTFSFileSystem(drive_path, &error_code);
+//	lblStatusBar->Caption = drive->GetBytesPerCluster();
+	ReadingThread *reading_thread = new ReadingThread(tedName->Text.c_str(), false);
 }
 //---------------------------------------------------------------------------
 bool TMainWindow::SearchBySignature(BYTE *sig, BYTE *cluster_data)
@@ -46,4 +53,5 @@ bool TMainWindow::SearchBySignature(BYTE *sig, BYTE *cluster_data)
 	return true;
 }
 //---------------------------------------------------------------------------
+
 

@@ -1,12 +1,10 @@
 //---------------------------------------------------------------------------
 
-#ifndef SearchingThreadH
-#define SearchingThreadH
+#ifndef ThreadSearchH
+#define ThreadSearchH
 //---------------------------------------------------------------------------
 #include <System.Classes.hpp>
 #include "main_window.h"
-//---------------------------------------------------------------------------
-const int WaitDelayMs = 2000;
 //---------------------------------------------------------------------------
 class SearchingThread : public TThread
 {
@@ -18,6 +16,7 @@ private:
 	void SearchData();
 	void __fastcall AddMatch();
 	void __fastcall CompleteSearch();
+    ULONGLONG current_cluster;
 protected:
 	void __fastcall Execute();
 public:

@@ -9,6 +9,8 @@
 #include <Vcl.Forms.hpp>
 #include "VirtualTrees.hpp"
 #include "NTFSFileSystem.h"
+#include "ReadingThread.h"
+#include <Vcl.ComCtrls.hpp>
 //---------------------------------------------------------------------------
 class TMainWindow : public TForm
 {
@@ -19,10 +21,16 @@ __published:	// IDE-managed Components
 	TLabel *lblPath;
 	TCheckBox *checkSqlite;
 	TLabel *lblStatusBar;
+	TLabel *lblCurrentClusterNumber;
+	TButton *btnStop;
+	TLabel *lblTotalClustersCount;
+	TProgressBar *pbSearchingStatus;
+	TLabel *lblSlash;
 	void __fastcall btnSearchClick(TObject *Sender);
 private:	// User declarations
 	bool SearchBySignature(BYTE *sig, BYTE *buf);
 	BYTE *sqlite_signature;
+//    ReadingThread *reading_thread;
 public:		// User declarations
 	__fastcall TMainWindow(TComponent* Owner);
 };

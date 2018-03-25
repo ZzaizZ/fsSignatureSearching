@@ -68,17 +68,17 @@ DWORD NTFSFileSystem::ReadBootRecord(BYTE *data_buffer)
 
 	return GetLastError();
 }
-
-// ----> testing method
+//---------------------------------------------------------------------------
 ULONGLONG NTFSFileSystem::GetClustersCount()
 {
 	return mbr->sectors_by_volume/mbr->sector_per_cluster;
 }
-// <------- testing method
+//---------------------------------------------------------------------------
 DWORD NTFSFileSystem::GetBytesPerCluster()
 {
 	return bytes_per_cluster;
 }
+//---------------------------------------------------------------------------
 int NTFSFileSystem::ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters, BYTE *data_buffer)
 {
 	ULONGLONG start_offset = start_cluster*bytes_per_cluster;

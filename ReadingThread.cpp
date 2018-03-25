@@ -20,7 +20,7 @@
 //      }
 //---------------------------------------------------------------------------
 using namespace std;
-__fastcall ReadingThread::ReadingThread(WCHAR *path, bool CreateSuspended)
+ReadingThread::ReadingThread(WCHAR *path, bool CreateSuspended)
 	: TThread(CreateSuspended)
 {
 	FreeOnTerminate = true;
@@ -36,24 +36,31 @@ __fastcall ReadingThread::ReadingThread(WCHAR *path, bool CreateSuspended)
 void __fastcall ReadingThread::Execute()
 {
 	//---- Place thread code here ----
+    SearchingThread *searching;
 	if (error_code == 0) {
 		DWORD bytes_per_cluster = drive->GetBytesPerCluster();
 		ULONGLONG clusters_count = drive->GetClustersCount();
+		MainWindow->lblTotalClustersCount->Caption = clusters_count;
 		BYTE *cluster_data = new BYTE[bytes_per_cluster];
-        searching_thread = new SearchingThread(cluster_data, bytes_per_cluster, false);
+        searching = new SearchingThread(cluster_data, bytes_per_cluster, false);
 		for (__int64 cluster = 0; cluster < clusters_count; cluster++) {
 
 			drive->ReadClusters(cluster, 1, cluster_data);
-            MainWindow->lblCurrentClusterNumber->Caption = cluster;
-			searching_thread->BufferReadyEvent->SetEvent();
-			while(searching_thread->BufferCopiedEvent->WaitFor(WaitDelayMs) != wrSignaled){}
-			searching_thread->
+			MainWindow->lblCurrentClusterNumber->Caption = cluster;
+            MainWindow->pbSearchingStatus->Position = 100*cluster/clusters_count;
+			searching->BufferReadyEvent->SetEvent();
+			while(searching->BufferCopiedEvent->WaitFor(2000) != wrSignaled){}
+			searching->BufferCopiedEvent->ResetEvent();
 
 			if (Terminated)
+			{
+                searching->Terminate();
 				break;
-            delete cluster_data;
+			}
+			delete[] cluster_data;
 		}
+		searching->Terminate();
+        delete[] cluster_data;
 	}
-	searching_thread->Terminate();
 }
 //---------------------------------------------------------------------------

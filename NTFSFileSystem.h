@@ -13,7 +13,7 @@ typedef struct
   ULONGLONG signature;
   SHORT bytes_per_sector;
   BYTE sector_per_cluster;
-  BYTE padding_2[6];
+  BYTE padding_2[7];
   BYTE device_type;
   BYTE padding_3[18];
   ULONGLONG sectors_by_volume;
