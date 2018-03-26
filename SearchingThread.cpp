@@ -20,20 +20,15 @@
 //      }
 //---------------------------------------------------------------------------
 
-typedef struct
-{
-	__int64 cluster_number;
-    BYTE *signature;
-} SearchCoincidence;
-
-__fastcall SearchingThread::SearchingThread(BYTE *data, DWORD cluster_size, bool CreateSuspended)
+__fastcall SearchingThread::SearchingThread(BYTE *data, DWORD cluster_size,  bool CreateSuspended)
 	: TThread(CreateSuspended)
 {
+    FreeOnTerminate = true;
+
 	cluster_data = data;
 	this->cluster_size = cluster_size;
-    this->current_cluster = current_cluster;
 	data_buffer = new BYTE[cluster_size];
-    FreeOnTerminate = true;
+
 	BufferReadyEvent  = new TEvent(NULL, true, false,"",false);
 	BufferCopiedEvent = new TEvent(NULL, true, false,"",false);
 }
@@ -54,8 +49,12 @@ void __fastcall SearchingThread::Execute()
 	}
 	delete BufferReadyEvent;
 	delete BufferCopiedEvent;
-	delete[] data_buffer;
+	delete [] data_buffer;
     Synchronize(&CompleteSearch);
+}
+void SearchingThread::SetCurrentCluster(ULONGLONG cluster)
+{
+    current_cluster = cluster;
 }
 //---------------------------------------------------------------------------
 void SearchingThread::CopyData()
@@ -93,12 +92,10 @@ void SearchingThread::SearchData()
 //---------------------------------------------------------------------------
 void __fastcall SearchingThread::AddMatch()
 {
-	VirtualStringTree1->BeginUpdate();
 	PVirtualNode new_node = MainWindow->vstFindingSectors->AddChild(MainWindow->vstFindingSectors->RootNode);
 	SearchCoincidence *node_data = (SearchCoincidence*)MainWindow->vstFindingSectors->GetNodeData(new_node);
 	node_data->cluster_number = current_cluster;
-	node_data->signature = "SQLite format 3";
-    VirtualStringTree1->EndUpdate();
+	node_data->signature = "SQlite format 3";
 }
 //---------------------------------------------------------------------------
 void __fastcall SearchingThread::CompleteSearch()

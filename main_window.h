@@ -27,8 +27,10 @@ __published:	// IDE-managed Components
 	TProgressBar *pbSearchingStatus;
 	TLabel *lblSlash;
 	void __fastcall btnSearchClick(TObject *Sender);
+	void __fastcall vstFindingSectorsGetText(TBaseVirtualTree *Sender, PVirtualNode Node,
+          TColumnIndex Column, TVSTTextType TextType, UnicodeString &CellText);
+
 private:	// User declarations
-	bool SearchBySignature(BYTE *sig, BYTE *buf);
 	BYTE *sqlite_signature;
 //    ReadingThread *reading_thread;
 public:		// User declarations

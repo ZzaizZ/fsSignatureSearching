@@ -6,6 +6,11 @@
 #include <System.Classes.hpp>
 #include "main_window.h"
 //---------------------------------------------------------------------------
+typedef struct
+{
+	__int64 cluster_number;
+    BYTE *signature;
+} SearchCoincidence;
 class SearchingThread : public TThread
 {
 private:
@@ -23,6 +28,7 @@ public:
 	__fastcall SearchingThread(BYTE *data, DWORD cluster_size, bool CreateSuspended);
 	TEvent *BufferReadyEvent;
 	TEvent *BufferCopiedEvent;
+    void SetCurrentCluster(ULONGLONG cluster);
 };
 //---------------------------------------------------------------------------
 #endif

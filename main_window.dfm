@@ -59,6 +59,7 @@ object MainWindow: TMainWindow
     TabOrder = 0
     TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowHorzGridLines, toShowTreeLines, toShowVertGridLines, toThemeAware, toUseBlendedImages, toFullVertGridLines]
     TreeOptions.SelectionOptions = [toFullRowSelect]
+    OnGetText = vstFindingSectorsGetText
     Columns = <
       item
         Position = 0

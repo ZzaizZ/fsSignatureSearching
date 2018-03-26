@@ -11,6 +11,7 @@ class ReadingThread : public TThread
 {
 private:
 	NTFSFileSystem *drive;
+    BYTE *cluster_data;
 	int error_code;
 protected:
 	void __fastcall Execute();

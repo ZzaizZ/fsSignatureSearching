@@ -28,30 +28,20 @@ void __fastcall TMainWindow::btnSearchClick(TObject *Sender)
 	WCHAR *drive_path = tedName->Text.c_str();
 	int error_code;
 	lblStatusBar->Caption = drive_path;
-//	NTFSFileSystem *drive = new NTFSFileSystem(drive_path, &error_code);
-//	lblStatusBar->Caption = drive->GetBytesPerCluster();
 	ReadingThread *reading_thread = new ReadingThread(tedName->Text.c_str(), false);
 }
 //---------------------------------------------------------------------------
-bool TMainWindow::SearchBySignature(BYTE *sig, BYTE *cluster_data)
+void __fastcall TMainWindow::vstFindingSectorsGetText(TBaseVirtualTree *Sender, PVirtualNode Node,
+          TColumnIndex Column, TVSTTextType TextType, UnicodeString &CellText)
+
 {
-	unsigned int sig_length = sizeof(sig)/sizeof(*sig);
-	unsigned int cluster_length = sizeof(cluster_data)/sizeof(*cluster_data);
-	if (sig_length > cluster_length)
+	if (!Node) return;
+	SearchCoincidence *node_data = (SearchCoincidence*)Sender->GetNodeData(Node);
+	switch (Column)
 	{
-        return false;
+		case 0: CellText = node_data->cluster_number; break;
+		case 1: CellText = (char *)node_data->signature; break;
 	}
-	for (unsigned int iter = 0; iter < sig_length; iter++)
-	{
-		if (sig[iter] == cluster_data[iter])
-		{
-            continue;
-		}
-		else
-			return false;
-	}
-	return true;
 }
 //---------------------------------------------------------------------------
-
 
