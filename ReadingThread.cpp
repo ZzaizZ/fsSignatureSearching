@@ -35,22 +35,21 @@ ReadingThread::ReadingThread(WCHAR *path, bool CreateSuspended)
 //---------------------------------------------------------------------------
 void __fastcall ReadingThread::Execute()
 {
-    SearchingThread *searching;
+	SearchingThread *searching;
+    MainWindow->pbSearchingStatus->Position = 0;
 	if (error_code == 0) {
 		DWORD bytes_per_cluster = drive->GetBytesPerCluster();
 		ULONGLONG clusters_count = drive->GetClustersCount();
-		MainWindow->lblTotalClustersCount->Caption = clusters_count;
-		cluster_data = new BYTE[bytes_per_cluster];
+		MainWindow->lblTotalClustersCount->Caption = clusters_count - 1;
+		cluster_data = new BYTE[bytes_per_cluster]; //??BUG??
         searching = new SearchingThread(cluster_data, bytes_per_cluster, false);
 		for (__int64 cluster = 0; cluster < clusters_count; cluster++) {
 
 			drive->ReadClusters(cluster, 1, cluster_data);
 			searching->BufferReadyEvent->SetEvent();
-
-			while(searching->BufferCopiedEvent->WaitFor(2000) != wrSignaled){}
-
 			MainWindow->lblCurrentClusterNumber->Caption = cluster;
-			MainWindow->pbSearchingStatus->Position = 100*cluster/clusters_count;
+			MainWindow->pbSearchingStatus->Position = 100 * cluster / (clusters_count - 1);
+			while(searching->BufferCopiedEvent->WaitFor(2000) != wrSignaled){}
 			searching->SetCurrentCluster(cluster);
 
 			searching->BufferCopiedEvent->ResetEvent();

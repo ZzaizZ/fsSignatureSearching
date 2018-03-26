@@ -11,7 +11,7 @@ NTFSFileSystem::NTFSFileSystem(WCHAR *drive_path, int *error_code)
 {
 	this->file_handle = 0;
 	is_NTFS = false;
-	file_handle = CreateFile(L"\\\\.\\J:", GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	file_handle = CreateFile(drive_path, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (file_handle == INVALID_HANDLE_VALUE)
 	{
 //		swprintf_s (error_message, 100, L"Ошибка при открытии файла. Код ошибки: %x", GetLastError());
