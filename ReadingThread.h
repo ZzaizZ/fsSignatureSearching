@@ -13,6 +13,7 @@ private:
 	NTFSFileSystem *drive;
     BYTE *cluster_data;
 	int error_code;
+    ULONGLONG clusters_count;
 protected:
 	void __fastcall Execute();
 public:

@@ -47,6 +47,7 @@ void __fastcall SearchingThread::Execute()
 		}
         if(Terminated) break;
 	}
+    MainWindow->lblStatusBar->Caption = L"Очистка памяти";
 	delete BufferReadyEvent;
 	delete BufferCopiedEvent;
 	delete [] data_buffer;
@@ -101,5 +102,6 @@ void __fastcall SearchingThread::AddMatch()
 void __fastcall SearchingThread::CompleteSearch()
 {
 	Application->MessageBoxW(L"Поиск окончен", L"Событие", MB_OK);
+    MainWindow->lblStatusBar->Caption = L"Поиск окончен";
 }
 //---------------------------------------------------------------------------

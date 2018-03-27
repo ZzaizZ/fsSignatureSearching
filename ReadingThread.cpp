@@ -30,8 +30,14 @@ ReadingThread::ReadingThread(WCHAR *path, bool CreateSuspended)
 		WCHAR error_message[100];
 		swprintf_s(error_message, 100, L"Ошибка открытия файловой системы (%i)", error_code);
 		MessageBoxW(NULL, error_message, L"Ошибка!", MB_OK );
+        this->Terminate();
 	}
-    MainWindow->lblStatusBar->Caption = path;
+	else
+	{
+        clusters_count = drive->GetClustersCount();
+    	MainWindow->lblStatusBar->Caption = clusters_count;
+    }
+
 }
 //---------------------------------------------------------------------------
 void __fastcall ReadingThread::Execute()
@@ -40,10 +46,11 @@ void __fastcall ReadingThread::Execute()
     MainWindow->pbSearchingStatus->Position = 0;
 	if (error_code == 0) {
 		DWORD bytes_per_cluster = drive->GetBytesPerCluster();
-		ULONGLONG clusters_count = drive->GetClustersCount();
+        MainWindow->lblStatusBar->Caption = L"Идёт поиск...";
 		MainWindow->lblTotalClustersCount->Caption = clusters_count - 1;
 		cluster_data = new BYTE[bytes_per_cluster]; //??BUG??
-        searching = new SearchingThread(cluster_data, bytes_per_cluster, false);
+		searching = new SearchingThread(cluster_data, bytes_per_cluster, false);
+        __int64 last_cluster = 0;
 		for (__int64 cluster = 0; cluster < clusters_count; cluster++) {
 
 			drive->ReadClusters(cluster, 1, cluster_data);
@@ -59,7 +66,10 @@ void __fastcall ReadingThread::Execute()
 
 			if (Terminated)
 				break;
+			last_cluster = cluster;
 		}
+		MainWindow->lblCurrentClusterNumber->Caption = last_cluster;
+		MainWindow->pbSearchingStatus->Position = 100 * last_cluster / (clusters_count - 1);
 		searching->Terminate();
 		delete [] cluster_data;
 	}
