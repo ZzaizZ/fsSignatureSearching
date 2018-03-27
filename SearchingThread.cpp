@@ -2,7 +2,7 @@
 
 #include <System.hpp>
 #pragma hdrstop
-
+#include "main_window.h"
 #include "SearchingThread.h"
 #pragma package(smart_init)
 //---------------------------------------------------------------------------

@@ -26,13 +26,15 @@ __published:	// IDE-managed Components
 	TLabel *lblTotalClustersCount;
 	TProgressBar *pbSearchingStatus;
 	TLabel *lblSlash;
+	TLabel *lblClusterInfo;
 	void __fastcall btnSearchClick(TObject *Sender);
 	void __fastcall vstFindingSectorsGetText(TBaseVirtualTree *Sender, PVirtualNode Node,
           TColumnIndex Column, TVSTTextType TextType, UnicodeString &CellText);
+	void __fastcall btnStopClick(TObject *Sender);
 
 private:	// User declarations
 	BYTE *sqlite_signature;
-//    ReadingThread *reading_thread;
+	ReadingThread *reading_thread;
 public:		// User declarations
 	__fastcall TMainWindow(TComponent* Owner);
 };

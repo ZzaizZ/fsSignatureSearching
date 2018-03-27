@@ -2,7 +2,7 @@
 
 #include <System.hpp>
 #pragma hdrstop
-
+#include "main_window.h"
 #include "ReadingThread.h"
 #pragma package(smart_init)
 //---------------------------------------------------------------------------
@@ -31,6 +31,7 @@ ReadingThread::ReadingThread(WCHAR *path, bool CreateSuspended)
 		swprintf_s(error_message, 100, L"Ошибка открытия файловой системы (%i)", error_code);
 		MessageBoxW(NULL, error_message, L"Ошибка!", MB_OK );
 	}
+    MainWindow->lblStatusBar->Caption = path;
 }
 //---------------------------------------------------------------------------
 void __fastcall ReadingThread::Execute()
@@ -47,8 +48,10 @@ void __fastcall ReadingThread::Execute()
 
 			drive->ReadClusters(cluster, 1, cluster_data);
 			searching->BufferReadyEvent->SetEvent();
-			MainWindow->lblCurrentClusterNumber->Caption = cluster;
-			MainWindow->pbSearchingStatus->Position = 100 * cluster / (clusters_count - 1);
+			if (cluster % 1000 == 0) {
+				MainWindow->lblCurrentClusterNumber->Caption = cluster;
+				MainWindow->pbSearchingStatus->Position = 100 * cluster / (clusters_count - 1);
+			}
 			while(searching->BufferCopiedEvent->WaitFor(2000) != wrSignaled){}
 			searching->SetCurrentCluster(cluster);
 

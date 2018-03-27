@@ -25,10 +25,10 @@ __fastcall TMainWindow::TMainWindow(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TMainWindow::btnSearchClick(TObject *Sender)
 {
-	WCHAR *drive_path = tedName->Text.c_str();
-	int error_code;
-	lblStatusBar->Caption = drive_path;
-	ReadingThread *reading_thread = new ReadingThread(tedName->Text.c_str(), false);
+	//WCHAR *drive_path = tedName->Text.c_str();
+	//int error_code;
+	//lblStatusBar->Caption = drive_path;
+	reading_thread = new ReadingThread(tedName->Text.c_str(), false);
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainWindow::vstFindingSectorsGetText(TBaseVirtualTree *Sender, PVirtualNode Node,
@@ -42,6 +42,12 @@ void __fastcall TMainWindow::vstFindingSectorsGetText(TBaseVirtualTree *Sender, 
 		case 0: CellText = node_data->cluster_number; break;
 		case 1: CellText = (char *)node_data->signature; break;
 	}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TMainWindow::btnStopClick(TObject *Sender)
+{
+    reading_thread->Terminate();
 }
 //---------------------------------------------------------------------------
 

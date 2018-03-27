@@ -4,7 +4,7 @@
 #define ReadingThreadH
 //---------------------------------------------------------------------------
 #include <System.Classes.hpp>
-#include "main_window.h"
+
 #include "SearchingThread.h"
 //---------------------------------------------------------------------------
 class ReadingThread : public TThread

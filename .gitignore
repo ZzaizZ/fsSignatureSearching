@@ -1,5 +1,6 @@
 __*/
-Win32/
+Win32/*
+!Win32/Debug/SignatureSearching.exe
 Win64/
 ProjectHeader.h
 SignatureSearching.*

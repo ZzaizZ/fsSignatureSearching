@@ -49,6 +49,13 @@ object MainWindow: TMainWindow
     Height = 13
     Caption = '/'
   end
+  object lblClusterInfo: TLabel
+    Left = 279
+    Top = 531
+    Width = 46
+    Height = 13
+    Caption = #1050#1083#1072#1089#1090#1077#1088':'
+  end
   object vstFindingSectors: TVirtualStringTree
     Left = 24
     Top = 96
@@ -106,12 +113,13 @@ object MainWindow: TMainWindow
     Height = 25
     Caption = #1057#1090#1086#1087
     TabOrder = 4
+    OnClick = btnStopClick
   end
   object pbSearchingStatus: TProgressBar
-    Left = 144
-    Top = 519
+    Left = 136
+    Top = 530
     Width = 137
-    Height = 24
+    Height = 13
     TabOrder = 5
   end
 end
