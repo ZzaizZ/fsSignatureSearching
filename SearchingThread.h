@@ -4,8 +4,9 @@
 #define ThreadSearchH
 //---------------------------------------------------------------------------
 #include <System.Classes.hpp>
-
+#include <vector>
 //---------------------------------------------------------------------------
+using namespace std;
 typedef struct
 {
 	__int64 cluster_number;
@@ -16,7 +17,7 @@ class SearchingThread : public TThread
 private:
 	BYTE *cluster_data;
     DWORD cluster_size;
-	BYTE *data_buffer;
+    vector<BYTE> data_buffer;
 	void CopyData();
 	void SearchData();
 	void __fastcall AddMatch();

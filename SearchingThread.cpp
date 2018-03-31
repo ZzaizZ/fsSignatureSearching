@@ -6,29 +6,13 @@
 #include "SearchingThread.h"
 #pragma package(smart_init)
 //---------------------------------------------------------------------------
-
-//   Important: Methods and properties of objects in VCL can only be
-//   used in a method called using Synchronize, for example:
-//
-//      Synchronize(&UpdateCaption);
-//
-//   where UpdateCaption could look like:
-//
-//      void __fastcall SearchingThread::UpdateCaption()
-//      {
-//        Form1->Caption = "Updated in a thread";
-//      }
-//---------------------------------------------------------------------------
-
 __fastcall SearchingThread::SearchingThread(BYTE *data, DWORD cluster_size,  bool CreateSuspended)
 	: TThread(CreateSuspended)
 {
-    FreeOnTerminate = true;
-
+	FreeOnTerminate = true;
 	cluster_data = data;
 	this->cluster_size = cluster_size;
-	data_buffer = new BYTE[cluster_size];
-
+	data_buffer.resize(cluster_size);
 	BufferReadyEvent  = new TEvent(NULL, true, false,"",false);
 	BufferCopiedEvent = new TEvent(NULL, true, false,"",false);
 }
@@ -50,7 +34,6 @@ void __fastcall SearchingThread::Execute()
     MainWindow->lblStatusBar->Caption = L"Очистка памяти";
 	delete BufferReadyEvent;
 	delete BufferCopiedEvent;
-	delete [] data_buffer;
     Synchronize(&CompleteSearch);
 }
 void SearchingThread::SetCurrentCluster(ULONGLONG cluster)
@@ -60,7 +43,7 @@ void SearchingThread::SetCurrentCluster(ULONGLONG cluster)
 //---------------------------------------------------------------------------
 void SearchingThread::CopyData()
 {
-	memcpy(data_buffer, cluster_data, cluster_size);
+	memcpy(&data_buffer[0], cluster_data, cluster_size);
 }
 //---------------------------------------------------------------------------
 void SearchingThread::SearchData()

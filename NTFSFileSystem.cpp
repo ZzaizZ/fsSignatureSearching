@@ -27,11 +27,9 @@ NTFSFileSystem::NTFSFileSystem(WCHAR *drive_path, int *error_code)
 		bytes_per_cluster = bytes_per_sector * sector_per_cluster;
 		is_NTFS = CheckNTFS();
 		if (is_NTFS) {
-			//swprintf_s(error_message, 100,L"На указанном диске не обранужено ФС NTFS");
 			*error_code = 1; // код ошибки неправильной ФС
 		}
 		else
-//			swprintf_s(error_message, 100,L"Открыт диск с системой NTFS");
 			*error_code = 0; // код удачного открытия системы NTFS
 	}
 

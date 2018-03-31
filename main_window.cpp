@@ -25,9 +25,6 @@ __fastcall TMainWindow::TMainWindow(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TMainWindow::btnSearchClick(TObject *Sender)
 {
-	//WCHAR *drive_path = tedName->Text.c_str();
-	//int error_code;
-	//lblStatusBar->Caption = drive_path;
 	reading_thread = new ReadingThread(tedName->Text.c_str(), false);
 }
 //---------------------------------------------------------------------------
