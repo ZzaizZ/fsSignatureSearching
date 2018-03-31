@@ -15,6 +15,14 @@ __fastcall SearchingThread::SearchingThread(BYTE *data, DWORD cluster_size,  boo
 	data_buffer.resize(cluster_size);
 	BufferReadyEvent  = new TEvent(NULL, true, false,"",false);
 	BufferCopiedEvent = new TEvent(NULL, true, false,"",false);
+
+	BYTE *sig;
+	// SQLite format 3
+	sig = "\x53\x51\x4C\x69\x74\x65\x20\x66\x6F\x72\x6D\x61\x74\x20\x33\x00";
+	signatures.push_back(sig);
+	// mp3
+	sig = "\x49\x44\x33";
+	signatures.push_back(sig);
 }
 //---------------------------------------------------------------------------
 void __fastcall SearchingThread::Execute()
@@ -48,38 +56,42 @@ void SearchingThread::CopyData()
 //---------------------------------------------------------------------------
 void SearchingThread::SearchData()
 {
-	bool matchFound = false;
-	BYTE *sig = "SQLite format 3";
-	unsigned int sig_length = sizeof(sig)/sizeof(*sig);
-	if (sig_length > cluster_size)
-	{
-		matchFound = false;
-	}
-	else
-	{
-        unsigned int flag = 0;
-		for (unsigned int iter = 0; iter < sig_length; iter++)
+	for (current_sig = signatures.begin(); current_sig != signatures.end(); current_sig++) {
+		bool matchFound = false;
+		unsigned int sig_length = sizeof(*current_sig)/sizeof(**current_sig);
+		if (sig_length > cluster_size)
 		{
-			if (sig[iter] == data_buffer[iter])
-				flag++;
-			else
-				matchFound = false;
+			matchFound = false;
+			continue;
 		}
-		if (flag == sig_length)
-			matchFound = true;
-	}
-	if(matchFound)
-	{
-		Synchronize(&AddMatch);
+		else
+		{
+			unsigned int flag = 0;
+			for (unsigned int iter = 0; iter < sig_length; iter++)
+			{
+				if ((*current_sig)[iter] == data_buffer[iter])
+					flag++;
+				else{
+
+                    break;
+				}
+			}
+			if (flag == sig_length)
+				matchFound = true;
+		}
+		if(matchFound)
+		{
+			Synchronize(&AddMatch);
+		}
 	}
 }
 //---------------------------------------------------------------------------
 void __fastcall SearchingThread::AddMatch()
 {
-	PVirtualNode new_node = MainWindow->vstFindingSectors->AddChild(MainWindow->vstFindingSectors->RootNode);
+    PVirtualNode new_node = MainWindow->vstFindingSectors->AddChild(MainWindow->vstFindingSectors->RootNode);
 	SearchCoincidence *node_data = (SearchCoincidence*)MainWindow->vstFindingSectors->GetNodeData(new_node);
 	node_data->cluster_number = current_cluster;
-	node_data->signature = "SQlite format 3";
+	node_data->signature = *current_sig;
 }
 //---------------------------------------------------------------------------
 void __fastcall SearchingThread::CompleteSearch()

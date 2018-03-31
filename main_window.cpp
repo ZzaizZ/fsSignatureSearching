@@ -18,13 +18,13 @@ TMainWindow *MainWindow;
 __fastcall TMainWindow::TMainWindow(TComponent* Owner)
 	: TForm(Owner)
 {
-	sqlite_signature = "SQLite format 3";
 	pbSearchingStatus->Max = 100;
-    pbSearchingStatus->Position = 0;
+	pbSearchingStatus->Position = 0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainWindow::btnSearchClick(TObject *Sender)
 {
+    vstFindingSectors->Clear();
 	reading_thread = new ReadingThread(tedName->Text.c_str(), false);
 }
 //---------------------------------------------------------------------------
@@ -37,7 +37,7 @@ void __fastcall TMainWindow::vstFindingSectorsGetText(TBaseVirtualTree *Sender, 
 	switch (Column)
 	{
 		case 0: CellText = node_data->cluster_number; break;
-		case 1: CellText = (char *)node_data->signature; break;
+		case 1: CellText = (char*)node_data->signature; break;
 	}
 }
 //---------------------------------------------------------------------------

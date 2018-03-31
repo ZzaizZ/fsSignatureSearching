@@ -19,7 +19,6 @@ __published:	// IDE-managed Components
 	TEdit *tedName;
 	TButton *btnSearch;
 	TLabel *lblPath;
-	TCheckBox *checkSqlite;
 	TLabel *lblStatusBar;
 	TLabel *lblCurrentClusterNumber;
 	TButton *btnStop;
@@ -33,7 +32,6 @@ __published:	// IDE-managed Components
 	void __fastcall btnStopClick(TObject *Sender);
 
 private:	// User declarations
-	BYTE *sqlite_signature;
 	ReadingThread *reading_thread;
 public:		// User declarations
 	__fastcall TMainWindow(TComponent* Owner);

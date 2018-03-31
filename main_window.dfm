@@ -1,9 +1,10 @@
 object MainWindow: TMainWindow
   Left = 0
   Top = 0
+  BorderStyle = bsSingle
   Caption = #1057#1080#1075#1085#1072#1090#1091#1088#1085#1099#1081' '#1087#1086#1080#1089#1082' '#1087#1086' '#1089#1077#1082#1090#1086#1088#1072#1084
-  ClientHeight = 552
-  ClientWidth = 465
+  ClientHeight = 562
+  ClientWidth = 475
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -63,6 +64,8 @@ object MainWindow: TMainWindow
     Height = 417
     Header.AutoSizeIndex = -1
     Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
+    ScrollBarOptions.ScrollBars = ssVertical
+    ScrollBarOptions.ScrollBarStyle = sbm3D
     TabOrder = 0
     TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowHorzGridLines, toShowTreeLines, toShowVertGridLines, toThemeAware, toUseBlendedImages, toFullVertGridLines]
     TreeOptions.SelectionOptions = [toFullRowSelect]
@@ -75,7 +78,7 @@ object MainWindow: TMainWindow
       end
       item
         Position = 1
-        Width = 240
+        Width = 247
         WideText = #1057#1080#1075#1085#1072#1090#1091#1088#1072
       end>
   end
@@ -96,23 +99,13 @@ object MainWindow: TMainWindow
     TabOrder = 2
     OnClick = btnSearchClick
   end
-  object checkSqlite: TCheckBox
-    Left = 288
-    Top = 22
-    Width = 49
-    Height = 25
-    Caption = 'sqlite'
-    Checked = True
-    State = cbChecked
-    TabOrder = 3
-  end
   object btnStop: TButton
     Left = 366
     Top = 57
     Width = 75
     Height = 25
     Caption = #1057#1090#1086#1087
-    TabOrder = 4
+    TabOrder = 3
     OnClick = btnStopClick
   end
   object pbSearchingStatus: TProgressBar
@@ -120,6 +113,6 @@ object MainWindow: TMainWindow
     Top = 530
     Width = 137
     Height = 13
-    TabOrder = 5
+    TabOrder = 4
   end
 end
