@@ -12,7 +12,6 @@ typedef struct
 {
     __int64 cluster_number;
 } EntryStruct;
-
 TMainWindow *MainWindow;
 //---------------------------------------------------------------------------
 __fastcall TMainWindow::TMainWindow(TComponent* Owner)

@@ -7,22 +7,29 @@
 #include <vector>
 #include <list>
 #include <string>
-//---------------------------------------------------------------------------
 using namespace std;
+//---------------------------------------------------------------------------
+typedef struct
+{
+	int id;
+	string signature;
+	string name;
+} SignDataEntry;
+//---------------------------------------------------------------------------
 typedef struct
 {
 	__int64 cluster_number;
-    BYTE* signature;
+    const char* signature;
 } SearchCoincidence;
+//---------------------------------------------------------------------------
 class SearchingThread : public TThread
 {
 private:
 	BYTE *cluster_data;
     DWORD cluster_size;
 	vector<BYTE> data_buffer;
-	list<BYTE*> signatures;
-	list<BYTE*>::iterator current_sig;
-    BYTE *found_signature;
+	vector<SignDataEntry>::iterator current_sig;
+	vector<SignDataEntry> signatures_db;
 	void CopyData();
 	void SearchData();
 	void __fastcall AddMatch();

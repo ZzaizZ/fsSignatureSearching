@@ -1,23 +1,9 @@
 //---------------------------------------------------------------------------
-
 #include <System.hpp>
 #pragma hdrstop
 #include "main_window.h"
 #include "ReadingThread.h"
 #pragma package(smart_init)
-//---------------------------------------------------------------------------
-
-//   Important: Methods and properties of objects in VCL can only be
-//   used in a method called using Synchronize, for example:
-//
-//      Synchronize(&UpdateCaption);
-//
-//   where UpdateCaption could look like:
-//
-//      void __fastcall ReadingThread::UpdateCaption()
-//      {
-//        Form1->Caption = "Updated in a thread";
-//      }
 //---------------------------------------------------------------------------
 using namespace std;
 ReadingThread::ReadingThread(WCHAR *path, bool CreateSuspended)
@@ -39,7 +25,7 @@ ReadingThread::ReadingThread(WCHAR *path, bool CreateSuspended)
     }
 
 }
-//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 void __fastcall ReadingThread::Execute()
 {
 	SearchingThread *searching;
