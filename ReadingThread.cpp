@@ -36,8 +36,13 @@ void __fastcall ReadingThread::Execute()
 		MainWindow->lblTotalClustersCount->Caption = clusters_count - 1;
 		cluster_data = new BYTE[bytes_per_cluster]; //??BUG??
 		searching = new SearchingThread(cluster_data, bytes_per_cluster, false);
-        __int64 last_cluster = 0;
-		for (__int64 cluster = 0; cluster < clusters_count; cluster++) {
+		__int64 last_cluster = 0;
+
+        IndexedIterator *it = new ClusterIterator(drive);
+
+		for (it->First(); !it->IsDone(); it->Next())
+        {
+            __int64 cluster = it->CurrentIndex();
 
 			drive->ReadClusters(cluster, 1, cluster_data);
 			searching->BufferReadyEvent->SetEvent();

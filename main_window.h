@@ -8,7 +8,6 @@
 #include <Vcl.StdCtrls.hpp>
 #include <Vcl.Forms.hpp>
 #include "VirtualTrees.hpp"
-#include "NTFSFileSystem.h"
 #include "ReadingThread.h"
 #include <Vcl.ComCtrls.hpp>
 //---------------------------------------------------------------------------

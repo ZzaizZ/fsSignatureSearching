@@ -6,6 +6,7 @@
 #include <System.Classes.hpp>
 
 #include "SearchingThread.h"
+#include "Iterator.h"
 //---------------------------------------------------------------------------
 class ReadingThread : public TThread
 {
