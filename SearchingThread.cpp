@@ -6,7 +6,7 @@
 #include "SearchingThread.h"
 #pragma package(smart_init)
 //---------------------------------------------------------------------------
-__fastcall SearchingThread::SearchingThread(BYTE *data, DWORD cluster_size,  bool CreateSuspended)
+__fastcall SearchingThread::SearchingThread(Cluster *data, DWORD cluster_size,  bool CreateSuspended)
 	: TThread(CreateSuspended)
 {
 	FreeOnTerminate = true;
@@ -50,7 +50,8 @@ void SearchingThread::SetCurrentCluster(ULONGLONG cluster)
 //---------------------------------------------------------------------------
 void SearchingThread::CopyData()
 {
-	memcpy(&data_buffer[0], cluster_data, cluster_size);
+    data_buffer.resize(cluster_size);
+	copy(cluster_data->begin(), cluster_data->end(), &data_buffer[0]);
 }
 //---------------------------------------------------------------------------
 void SearchingThread::SearchData()

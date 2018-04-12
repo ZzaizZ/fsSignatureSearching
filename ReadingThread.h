@@ -11,8 +11,8 @@
 class ReadingThread : public TThread
 {
 private:
-	NTFSFileSystem *drive;
-    BYTE *cluster_data;
+	FileSystem *drive;
+    Cluster cluster_data;
 	int error_code;
     ULONGLONG clusters_count;
 protected:

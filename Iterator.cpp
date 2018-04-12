@@ -1,37 +1,24 @@
-//---------------------------------------------------------------------------
-#ifndef ThreadSearchH
-#define ThreadSearchH
-#pragma hdrstop
-
 #include "Iterator.h"
-#include <string>
-//---------------------------------------------------------------------------
-#pragma package(smart_init)
+#include <iostream>
 
-ClusterIterator::ClusterIterator(NTFSFileSystem *drive)
+
+NtfsClusterIterator::NtfsClusterIterator(FileSystem *drive)
 {
-	container_size = drive->GetClustersCount();
 	this->drive = drive;
+	container_size = drive->GetClustersCount();
 }
 
-void ClusterIterator::First()
+Cluster NtfsClusterIterator::CurrentItem()
 {
-    current_cluster = 0;
+    return drive->ReadClusters(current_cluster, (DWORD)1);
 }
 
-void ClusterIterator::Next()
+bool NtfsClusterIterator::IsDone()
 {
-    current_cluster++;
+	if (current_cluster >= container_size)
+		return true;
+	else
+		return false;
 }
 
-bool ClusterIterator::IsDone()
-{
-	return (current_cluster >= container_size);
-}
 
-BYTE* ClusterIterator::CurrentItem(BYTE *data_buffer)
-{
-	drive->ReadClusters(current_cluster, 1, data_buffer);
-    return data_buffer;
-}
-#endif

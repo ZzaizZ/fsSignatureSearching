@@ -16,6 +16,8 @@ typedef struct
 	string name;
 } SignDataEntry;
 //---------------------------------------------------------------------------
+typedef vector<BYTE> Cluster;
+//---------------------------------------------------------------------------
 typedef struct
 {
 	__int64 cluster_number;
@@ -25,9 +27,9 @@ typedef struct
 class SearchingThread : public TThread
 {
 private:
-	BYTE *cluster_data;
+	Cluster *cluster_data;
     DWORD cluster_size;
-	vector<BYTE> data_buffer;
+	Cluster data_buffer;
 	vector<SignDataEntry>::iterator current_sig;
 	vector<SignDataEntry> signatures_db;
 	void CopyData();
@@ -38,7 +40,7 @@ private:
 protected:
 	void __fastcall Execute();
 public:
-	__fastcall SearchingThread(BYTE *data, DWORD cluster_size, bool CreateSuspended);
+	__fastcall SearchingThread(Cluster *data, DWORD cluster_size,  bool CreateSuspended);
 	TEvent *BufferReadyEvent;
 	TEvent *BufferCopiedEvent;
     void SetCurrentCluster(ULONGLONG cluster);
