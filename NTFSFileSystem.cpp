@@ -32,8 +32,8 @@ NtfsFS::NtfsFS(const WCHAR *p, int *error_code)
 		SHORT bytes_per_sector = ( mbr->bytes_per_sector );
         BYTE sector_per_cluster = (mbr->sector_per_cluster);
         bytes_per_cluster = bytes_per_sector * sector_per_cluster;
-        is_NTFS = CheckNTFS();
-        if (is_NTFS) { //// ÇÀÌÅÍÈÒÜ ÍÀ ÍÅ!!!!!!!!!!!!!!!
+		is_NTFS = CheckNTFS();
+		if (!is_NTFS) {
             *error_code = 200;
         }
         else
@@ -69,7 +69,8 @@ DWORD NtfsFS::ReadBootRecord(BYTE *data_buffer)
 
 bool NtfsFS::CheckNTFS()
 {
-    if( mbr->signature == 0x4e54465320202020 )
+	//0x4e54465320202020 NTFS. Ñðàâíèâàåì ñ ïåðåâ¸ðíóòîé
+	if( mbr->signature == 0x202020205346544e )
         return TRUE;
     else
         return FALSE;
