@@ -14,7 +14,8 @@ private:
 	FileSystem *drive;
     Cluster cluster_data;
 	int error_code;
-    ULONGLONG clusters_count;
+	ULONGLONG clusters_count;
+    IndexedIterator* ChoiseIterator();
 protected:
 	void __fastcall Execute();
 public:

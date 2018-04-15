@@ -4,7 +4,7 @@ object MainWindow: TMainWindow
   BorderStyle = bsSingle
   Caption = #1057#1080#1075#1085#1072#1090#1091#1088#1085#1099#1081' '#1087#1086#1080#1089#1082' '#1087#1086' '#1089#1077#1082#1090#1086#1088#1072#1084
   ClientHeight = 562
-  ClientWidth = 475
+  ClientWidth = 466
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -85,7 +85,7 @@ object MainWindow: TMainWindow
   object tedName: TEdit
     Left = 136
     Top = 24
-    Width = 121
+    Width = 54
     Height = 21
     TabOrder = 1
     Text = '\\.\J:'
@@ -100,7 +100,7 @@ object MainWindow: TMainWindow
     OnClick = btnSearchClick
   end
   object btnStop: TButton
-    Left = 366
+    Left = 115
     Top = 57
     Width = 75
     Height = 25
@@ -114,5 +114,45 @@ object MainWindow: TMainWindow
     Width = 137
     Height = 13
     TabOrder = 4
+  end
+  object RadioGroup1: TRadioGroup
+    Left = 196
+    Top = 17
+    Width = 245
+    Height = 73
+    Caption = #1052#1077#1090#1086#1076' '#1086#1073#1093#1086#1076#1072' '#1082#1083#1072#1089#1090#1077#1088#1086#1074
+    TabOrder = 5
+  end
+  object radAll: TRadioButton
+    Left = 207
+    Top = 40
+    Width = 90
+    Height = 17
+    Caption = #1042#1089#1077' '#1082#1083#1072#1089#1090#1077#1088#1072
+    TabOrder = 6
+  end
+  object radRange: TRadioButton
+    Left = 207
+    Top = 63
+    Width = 66
+    Height = 17
+    Caption = #1044#1080#1072#1087#1072#1079#1086#1085
+    TabOrder = 7
+  end
+  object tedStartCluster: TEdit
+    Left = 279
+    Top = 63
+    Width = 66
+    Height = 21
+    TabOrder = 8
+    Text = '0'
+  end
+  object tedStopCluster: TEdit
+    Left = 368
+    Top = 63
+    Width = 65
+    Height = 21
+    TabOrder = 9
+    Text = '0'
   end
 end

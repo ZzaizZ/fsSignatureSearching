@@ -19,6 +19,9 @@ __fastcall TMainWindow::TMainWindow(TComponent* Owner)
 {
 	pbSearchingStatus->Max = 100;
 	pbSearchingStatus->Position = 0;
+	radAll->Checked = true;
+	//tedStartCluster->Enabled = false;
+    //tedStopCluster->Enabled = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainWindow::btnSearchClick(TObject *Sender)
@@ -46,4 +49,5 @@ void __fastcall TMainWindow::btnStopClick(TObject *Sender)
     reading_thread->Terminate();
 }
 //---------------------------------------------------------------------------
+
 

@@ -10,6 +10,7 @@
 #include "VirtualTrees.hpp"
 #include "ReadingThread.h"
 #include <Vcl.ComCtrls.hpp>
+#include <Vcl.ExtCtrls.hpp>
 //---------------------------------------------------------------------------
 class TMainWindow : public TForm
 {
@@ -25,6 +26,11 @@ __published:	// IDE-managed Components
 	TProgressBar *pbSearchingStatus;
 	TLabel *lblSlash;
 	TLabel *lblClusterInfo;
+	TRadioGroup *RadioGroup1;
+	TRadioButton *radAll;
+	TRadioButton *radRange;
+	TEdit *tedStartCluster;
+	TEdit *tedStopCluster;
 	void __fastcall btnSearchClick(TObject *Sender);
 	void __fastcall vstFindingSectorsGetText(TBaseVirtualTree *Sender, PVirtualNode Node,
           TColumnIndex Column, TVSTTextType TextType, UnicodeString &CellText);

@@ -26,6 +26,16 @@ ReadingThread::ReadingThread(WCHAR *path, bool CreateSuspended)
 
 }
 //---------------------------------------------------------------------------
+IndexedIterator* ReadingThread::ChoiseIterator()
+{
+	if (MainWindow->radAll->Checked)
+		return new NtfsClusterIterator(drive);
+	else if (MainWindow->radRange->Checked)
+		return new RangeClustersDec(StrToInt64(MainWindow->tedStartCluster->Text),
+		StrToInt64(MainWindow->tedStopCluster->Text),
+		new NtfsClusterIterator(drive));
+}
+//---------------------------------------------------------------------------
 void __fastcall ReadingThread::Execute()
 {
 	SearchingThread *searching;
@@ -37,8 +47,8 @@ void __fastcall ReadingThread::Execute()
 		searching = new SearchingThread(&cluster_data, bytes_per_cluster, false);
 		__int64 last_cluster = 0;
 
-	  //IndexedIterator *it = new NtfsClusterIterator(drive);
-	  IndexedIterator *it = new RangeClustersDec(0, 4000, new NtfsClusterIterator(drive));
+		IndexedIterator *it = ChoiseIterator();
+
 		for (it->First(); !it->IsDone(); it->Next())
         {
 			__int64 cluster = it->CurrentIndex();
