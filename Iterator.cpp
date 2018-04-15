@@ -21,4 +21,17 @@ bool NtfsClusterIterator::IsDone()
 		return false;
 }
 
+RangeClustersDec::RangeClustersDec(ULONGLONG start_cluster, ULONGLONG stop_cluster, IndexedIterator *it)
+    :IndexedIteratorDecorator(it)
+{
+    this->start_cluster = start_cluster;
+    this->stop_cluster = stop_cluster;
+}
+
+void RangeClustersDec::First()
+{
+    for (it->First(); !it->IsDone(); it->Next())
+        if (it->CurrentIndex() == start_cluster)
+            break;
+}
 

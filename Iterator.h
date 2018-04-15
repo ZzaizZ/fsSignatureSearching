@@ -47,5 +47,33 @@ private:
     ULONGLONG current_cluster;
 };
 
+class IndexedIteratorDecorator : public IndexedIterator
+{
+protected:
+    IndexedIterator *it;
+    IndexedIteratorDecorator() {};
+    IndexedIteratorDecorator(IndexedIterator *it) { this->it = it; };
+public:
+    void First() { it->First(); }
+    void Next() { it->Next(); }
+    bool IsDone() { return it->IsDone(); }
+    Cluster CurrentItem() { return it->CurrentItem(); }
+    ULONGLONG CurrentIndex() { return it->CurrentIndex(); }
+};
+
+class RangeClustersDec : public IndexedIteratorDecorator
+{
+private:
+    ULONGLONG start_cluster;
+    ULONGLONG stop_cluster;
+public:
+    RangeClustersDec(ULONGLONG start_cluster, ULONGLONG stop_cluster, IndexedIterator *it);
+    void First();
+    void Next() { it->Next(); }
+    bool IsDone() {return (it->CurrentIndex() > stop_cluster || it->IsDone()); }
+    Cluster GetCurrent() { return it->CurrentItem(); }
+    ULONGLONG GetCurrentIndex()  { return  it->CurrentIndex(); }
+};
+
 #endif //FILESYSTEM_ITERATOR_H
 

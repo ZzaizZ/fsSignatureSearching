@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+ï»¿//---------------------------------------------------------------------------
 #include <System.hpp>
 #pragma hdrstop
 #include "main_window.h"
@@ -14,8 +14,8 @@ ReadingThread::ReadingThread(WCHAR *path, bool CreateSuspended)
 	drive = new NtfsFS(path, &error_code);
 	if (error_code != 0) {
 		WCHAR error_message[100];
-		swprintf_s(error_message, 100, L"Îøèáêà îòêðûòèÿ ôàéëîâîé ñèñòåìû (%i)", error_code);
-		MessageBoxW(NULL, error_message, L"Îøèáêà!", MB_OK );
+		swprintf_s(error_message, 100, L"ÐžÑˆÐ¸Ð±ÐºÐ° Ð¿Ñ€Ð¸ Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚Ð¸Ð¸ Ñ„Ð°Ð¹Ð»Ð¾Ð²Ð¾Ð¹ ÑÐ¸ÑÑ‚ÐµÐ¼Ñ‹: (%i)", error_code);
+		MessageBoxW(NULL, error_message, L"ÐžÑˆÐ¸Ð±ÐºÐ°!", MB_OK );
         this->Terminate();
 	}
 	else
@@ -32,17 +32,16 @@ void __fastcall ReadingThread::Execute()
     MainWindow->pbSearchingStatus->Position = 0;
 	if (error_code == 0) {
 		DWORD bytes_per_cluster = drive->GetBytesPerCluster();
-        MainWindow->lblStatusBar->Caption = L"Èä¸ò ïîèñê...";
+        MainWindow->lblStatusBar->Caption = L"Ð˜Ð´Ñ‘Ñ‚ Ð¿Ð¾Ð¸ÑÐº...";
 		MainWindow->lblTotalClustersCount->Caption = clusters_count - 1;
-		//cluster_data = drive->ReadClusters(0,1);
 		searching = new SearchingThread(&cluster_data, bytes_per_cluster, false);
 		__int64 last_cluster = 0;
 
-	  IndexedIterator *it = new NtfsClusterIterator(drive);
+	  //IndexedIterator *it = new NtfsClusterIterator(drive);
+	  IndexedIterator *it = new RangeClustersDec(0, 4000, new NtfsClusterIterator(drive));
 		for (it->First(); !it->IsDone(); it->Next())
         {
 			__int64 cluster = it->CurrentIndex();
-//			drive->ReadClusters(cluster, 1, cluster_data);
 			cluster_data = it->CurrentItem();
 			searching->BufferReadyEvent->SetEvent();
 			if (cluster % 1000 == 0) {
