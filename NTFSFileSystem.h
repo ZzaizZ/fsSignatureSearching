@@ -66,6 +66,49 @@ private:
     bool CheckNTFS();
     NTFS_BootRecord *mbr;
 };
+//------------------------------------
+//          FsFAT32
+//------------------------------------
+#pragma pack(push, 1)
+typedef struct
+{
+    BYTE jmp[3];
+    ULONGLONG oem_name;
+    SHORT bytes_per_sector;
+    BYTE sectors_per_cluster;
+    SHORT reserved_sectors;
+    BYTE numbers_of_copies_fat;
+    BYTE padding_1[2];
+    BYTE padding_2[2];
+    BYTE media_descriptor;
+    BYTE padding_3[2];
+    SHORT sectors_per_track;
+    SHORT number_of_heads;
+    DWORD number_of_hidden_sectors;
+    DWORD sectors_in_partition;
+    DWORD sectors_per_fat;
+    BYTE padding_4[42];
+    ULONGLONG fat_name;
+    BYTE exec_code[420];
+    SHORT boot_record_signature;
+} FAT32_BootRecord;
+#pragma pack(pop)
+
+class Fat32FS : public FileSystem
+{
+public:
+    Fat32FS(const WCHAR *p, int *error_code);
+    Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters, int *error_code);
+    Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters);
+    ULONGLONG GetClustersCount();
+    ~Fat32FS() {};
+private:
+    BYTE data_buffer[512];
+    bool is_FAT32;
+    DWORD ReadBootRecord(BYTE *data_buffer);
+    bool CheckFAT32();
+    FAT32_BootRecord *mbr;
+};
 
 #endif //FILESYSTEM_FILESYSTEM_H
 

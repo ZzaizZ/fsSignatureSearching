@@ -21,6 +21,17 @@ bool NtfsClusterIterator::IsDone()
 		return false;
 }
 
+Fat32ClusterIterator::Fat32ClusterIterator(FileSystem *drive)
+{
+    this->drive = drive;
+	container_size = drive->GetClustersCount()-1;
+}
+
+Cluster Fat32ClusterIterator::CurrentItem()
+{
+    return drive->ReadClusters(current_cluster+1, (DWORD)1);
+}
+
 RangeClustersDec::RangeClustersDec(ULONGLONG start_cluster, ULONGLONG stop_cluster, IndexedIterator *it)
     :IndexedIteratorDecorator(it)
 {
