@@ -109,6 +109,48 @@ private:
     bool CheckFAT32();
     FAT32_BootRecord *mbr;
 };
+//------------------------------------
+//          FsExt4
+//------------------------------------
+#pragma pack(push, 1)
+typedef struct
+{
+    DWORD s_inodes_count;
+    DWORD s_blocks_count_lo;
+    DWORD s_r_blocks_count_lo;
+    DWORD s_free_blocks_count_lo;
+    DWORD s_free_inodes_count;
+    DWORD s_first_data_block;
+    DWORD s_log_block_size;
+    DWORD s_log_cluster_size;
+    DWORD s_blocks_per_group;
+    DWORD s_clusters_per_group;
+    DWORD s_inodes_per_group;
+    DWORD s_mtime;
+    DWORD s_wtime;
+    SHORT s_mnt_count;
+    SHORT s_max_mnt_count;
+    SHORT s_magic;
+
+} Ext4_BootRecord;
+#pragma pack(pop)
+class Ext4FS : public FileSystem
+{
+public:
+    Ext4FS(const WCHAR *p, int *error_code);
+    Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters, int *error_code);
+    Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters);
+    ULONGLONG GetClustersCount();
+    ~Ext4FS() {};
+private:
+    BYTE data_buffer[512];
+    bool is_Ext4;
+    DWORD ReadBootRecord(BYTE *data_buffer);
+    bool CheckExt4();
+    Ext4_BootRecord *mbr;
+    int blocks_count;
+    int block_size;
+};
 
 #endif //FILESYSTEM_FILESYSTEM_H
 

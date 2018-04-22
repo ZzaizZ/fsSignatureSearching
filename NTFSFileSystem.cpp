@@ -244,3 +244,112 @@ Cluster Fat32FS::ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters,
     *error_code = (int)GetLastError();
     return read_clusters;
 }
+//------------------------------------
+//          FsExt4
+//------------------------------------
+Ext4FS::Ext4FS(const WCHAR *p, int *error_code)
+    :FileSystem(p, error_code)
+{
+    HANDLE file_handle = FsHandle();
+    if (file_handle != INVALID_HANDLE_VALUE)
+    {
+        BYTE data_buffer[1024]; //full superblock length is 1024
+        ReadBootRecord(data_buffer);
+        mbr = (Ext4_BootRecord*)data_buffer;
+        blocks_count = ( mbr->s_blocks_count_lo);
+        block_size = 1 << (10+mbr->s_log_block_size);
+        is_Ext4 = CheckExt4();
+        if (!is_Ext4) {
+            *error_code = 200;
+        }
+        else
+            *error_code = 0;
+    }
+}
+
+DWORD Ext4FS::ReadBootRecord(BYTE *data_buffer)
+{
+    ULONGLONG start_offset = 1024;
+    LARGE_INTEGER sector_offset;
+    sector_offset.QuadPart = start_offset;
+    unsigned long current_position = SetFilePointer(
+            FsHandle(),
+            sector_offset.LowPart,
+            &sector_offset.HighPart,
+            FILE_BEGIN
+    );
+    if(current_position != sector_offset.LowPart)
+    {
+        return GetLastError() + 1000;
+    }
+    DWORD bytes_to_read = 1024;
+    DWORD bytes_read;
+    bool read_result = (bool)ReadFile(FsHandle(), data_buffer, bytes_to_read, &bytes_read, NULL);
+    if(!read_result || bytes_read != bytes_to_read)
+    {
+        return GetLastError() + 10;
+    }
+    return GetLastError();
+}
+
+bool Ext4FS::CheckExt4()
+{
+	if( mbr->s_magic == 0xEF53 )
+		return TRUE;
+    else
+        return FALSE;
+}
+
+ULONGLONG Ext4FS::GetClustersCount()
+{
+	return (ULONGLONG)mbr->s_blocks_count_lo;
+}
+
+Cluster Ext4FS::ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters)
+{
+    Cluster read_clusters;
+    ULONGLONG start_offset = start_cluster*block_size;
+    LARGE_INTEGER sector_offset;
+    sector_offset.QuadPart = start_offset;
+    unsigned long currentPosition = SetFilePointer(FsHandle(),
+                                                   sector_offset.LowPart,
+                                                   &sector_offset.HighPart,
+                                                   FILE_BEGIN);
+    if(currentPosition != sector_offset.LowPart)
+        return read_clusters;
+    else
+    {
+        DWORD bytes_to_read = number_of_clusters * block_size;
+        DWORD bytes_read;
+        read_clusters.resize(bytes_to_read);
+        bool read_result = (bool)ReadFile(FsHandle(), &read_clusters[0], bytes_to_read, &bytes_read, NULL);
+        if (!read_result || bytes_read != bytes_to_read)
+            return read_clusters;
+    }
+    return read_clusters;
+}
+
+Cluster Ext4FS::ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters, int *error_code)
+{
+    Cluster read_clusters;
+    ULONGLONG start_offset = start_cluster*block_size;
+    LARGE_INTEGER sector_offset;
+    sector_offset.QuadPart = start_offset;
+    unsigned long currentPosition = SetFilePointer(FsHandle(),
+                                                   sector_offset.LowPart,
+                                                   &sector_offset.HighPart,
+                                                   FILE_BEGIN);
+    if(currentPosition != sector_offset.LowPart)
+        *error_code = (int)GetLastError()+2000;
+    else
+    {
+        DWORD bytes_to_read = number_of_clusters * block_size;
+        DWORD bytes_read;
+        read_clusters.resize(bytes_to_read);
+        bool read_result = (bool)ReadFile(FsHandle(), &read_clusters[0], bytes_to_read, &bytes_read, NULL);
+        if (!read_result || bytes_read != bytes_to_read)
+            *error_code = (int)GetLastError() + 20;
+    }
+    *error_code = (int)GetLastError();
+    return read_clusters;
+}
