@@ -62,6 +62,21 @@ private:
     ULONGLONG current_cluster;
 };
 
+class Ext4ClusterIterator : public IndexedIterator
+{
+public:
+    void First() { current_cluster = 2; }
+    void Next() { current_cluster++; }
+    bool IsDone() { return (current_cluster >= container_size); }
+    Cluster CurrentItem();
+    ULONGLONG CurrentIndex() { return current_cluster; }
+    Ext4ClusterIterator(FileSystem *drive);
+private:
+    FileSystem *drive;
+    ULONGLONG container_size;
+    ULONGLONG current_cluster;
+};
+
 class IndexedIteratorDecorator : public IndexedIterator
 {
 protected:
