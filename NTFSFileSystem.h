@@ -149,7 +149,6 @@ private:
     bool CheckExt4();
     Ext4_BootRecord *mbr;
     int blocks_count;
-    int block_size;
 };
 
 #endif //FILESYSTEM_FILESYSTEM_H

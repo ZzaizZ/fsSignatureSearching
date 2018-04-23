@@ -27,8 +27,6 @@ NtfsFS::NtfsFS(const WCHAR *p, int *error_code)
 	{
         ReadBootRecord(data_buffer);
         mbr = (NTFS_BootRecord*)data_buffer;
-        cout << data_buffer[3] << endl;
-        cout << mbr->signature;
 		SHORT bytes_per_sector = ( mbr->bytes_per_sector );
         BYTE sector_per_cluster = (mbr->sector_per_cluster);
         bytes_per_cluster = bytes_per_sector * sector_per_cluster;
@@ -69,7 +67,7 @@ DWORD NtfsFS::ReadBootRecord(BYTE *data_buffer)
 
 bool NtfsFS::CheckNTFS()
 {
-	//0x4e54465320202020 NTFS. ���������� � �����������
+	//0x4e54465320202020 NTFS.
 	if( mbr->signature == 0x202020205346544e )
         return TRUE;
     else
@@ -257,9 +255,9 @@ Ext4FS::Ext4FS(const WCHAR *p, int *error_code)
         ReadBootRecord(data_buffer);
         mbr = (Ext4_BootRecord*)data_buffer;
         blocks_count = ( mbr->s_blocks_count_lo);
-        block_size = 1 << (10+mbr->s_log_block_size);
+        bytes_per_cluster = 1 << (10+mbr->s_log_block_size);
         is_Ext4 = CheckExt4();
-        if (!is_Ext4) {
+        if (is_Ext4) {
             *error_code = 200;
         }
         else
@@ -302,13 +300,13 @@ bool Ext4FS::CheckExt4()
 
 ULONGLONG Ext4FS::GetClustersCount()
 {
-	return (ULONGLONG)mbr->s_blocks_count_lo;
+	return mbr->s_blocks_count_lo;
 }
 
 Cluster Ext4FS::ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters)
 {
     Cluster read_clusters;
-    ULONGLONG start_offset = start_cluster*block_size;
+    ULONGLONG start_offset = start_cluster*bytes_per_cluster;
     LARGE_INTEGER sector_offset;
     sector_offset.QuadPart = start_offset;
     unsigned long currentPosition = SetFilePointer(FsHandle(),
@@ -319,7 +317,7 @@ Cluster Ext4FS::ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters)
         return read_clusters;
     else
     {
-        DWORD bytes_to_read = number_of_clusters * block_size;
+        DWORD bytes_to_read = number_of_clusters * bytes_per_cluster;
         DWORD bytes_read;
         read_clusters.resize(bytes_to_read);
         bool read_result = (bool)ReadFile(FsHandle(), &read_clusters[0], bytes_to_read, &bytes_read, NULL);
@@ -332,7 +330,7 @@ Cluster Ext4FS::ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters)
 Cluster Ext4FS::ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters, int *error_code)
 {
     Cluster read_clusters;
-    ULONGLONG start_offset = start_cluster*block_size;
+    ULONGLONG start_offset = start_cluster*bytes_per_cluster;
     LARGE_INTEGER sector_offset;
     sector_offset.QuadPart = start_offset;
     unsigned long currentPosition = SetFilePointer(FsHandle(),
@@ -343,7 +341,7 @@ Cluster Ext4FS::ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters, 
         *error_code = (int)GetLastError()+2000;
     else
     {
-        DWORD bytes_to_read = number_of_clusters * block_size;
+        DWORD bytes_to_read = number_of_clusters * bytes_per_cluster;
         DWORD bytes_read;
         read_clusters.resize(bytes_to_read);
         bool read_result = (bool)ReadFile(FsHandle(), &read_clusters[0], bytes_to_read, &bytes_read, NULL);

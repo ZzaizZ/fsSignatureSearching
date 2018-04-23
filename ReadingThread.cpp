@@ -12,7 +12,8 @@ ReadingThread::ReadingThread(WCHAR *path, bool CreateSuspended)
 	FreeOnTerminate = true;
 	error_code = 0;
 	//drive = new NtfsFS(path, &error_code);
-	drive = new Fat32FS(path, &error_code);
+	//drive = new Fat32FS(path, &error_code);
+    drive = new Ext4FS(path, &error_code);
 	if (error_code != 0) {
 		WCHAR error_message[100];
 		swprintf_s(error_message, 100, L"Ошибка при открытии файловой системы: (%i)", error_code);
@@ -31,7 +32,8 @@ IndexedIterator* ReadingThread::ChoiseIterator()
 {
 	if (MainWindow->radAll->Checked)
 //		return new NtfsClusterIterator(drive);
-		return new Fat32ClusterIterator(drive);
+//		return new Fat32ClusterIterator(drive);
+        return new Ext4ClusterIterator(drive);
 	else if (MainWindow->radRange->Checked)
 		return new RangeClustersDec(StrToInt64(MainWindow->tedStartCluster->Text),
 		StrToInt64(MainWindow->tedStopCluster->Text),
