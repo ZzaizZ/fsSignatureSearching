@@ -57,11 +57,18 @@ object MainWindow: TMainWindow
     Height = 13
     Caption = #1050#1083#1072#1089#1090#1077#1088':'
   end
+  object lblFsType: TLabel
+    Left = 25
+    Top = 59
+    Width = 36
+    Height = 13
+    Caption = #1058#1080#1087' '#1060#1057
+  end
   object vstFindingSectors: TVirtualStringTree
     Left = 24
-    Top = 96
+    Top = 128
     Width = 417
-    Height = 417
+    Height = 385
     Header.AutoSizeIndex = -1
     Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
     ScrollBarOptions.ScrollBars = ssVertical
@@ -91,8 +98,8 @@ object MainWindow: TMainWindow
     Text = '\\.\J:'
   end
   object btnSearch: TButton
-    Left = 24
-    Top = 57
+    Left = 25
+    Top = 89
     Width = 75
     Height = 25
     Caption = #1055#1086#1080#1089#1082
@@ -101,7 +108,7 @@ object MainWindow: TMainWindow
   end
   object btnStop: TButton
     Left = 115
-    Top = 57
+    Top = 89
     Width = 75
     Height = 25
     Caption = #1057#1090#1086#1087
@@ -154,5 +161,13 @@ object MainWindow: TMainWindow
     Height = 21
     TabOrder = 9
     Text = '0'
+  end
+  object cbFsType: TComboBox
+    Left = 80
+    Top = 56
+    Width = 110
+    Height = 21
+    TabOrder = 10
+    Text = 'NTFS'
   end
 end

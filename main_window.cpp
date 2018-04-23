@@ -20,6 +20,11 @@ __fastcall TMainWindow::TMainWindow(TComponent* Owner)
 	pbSearchingStatus->Max = 100;
 	pbSearchingStatus->Position = 0;
 	radAll->Checked = true;
+
+	cbFsType->AddItem("NTFS", NULL);
+	cbFsType->AddItem("FAT32", NULL);
+	cbFsType->AddItem("Ext4", NULL);
+	cbFsType->ItemIndex = 0;
 	//tedStartCluster->Enabled = false;
     //tedStopCluster->Enabled = false;
 }
@@ -49,5 +54,6 @@ void __fastcall TMainWindow::btnStopClick(TObject *Sender)
     reading_thread->Terminate();
 }
 //---------------------------------------------------------------------------
+
 
 

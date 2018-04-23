@@ -35,16 +35,16 @@ Cluster Fat32ClusterIterator::CurrentItem()
 Ext4ClusterIterator::Ext4ClusterIterator(FileSystem *drive)
 {
     this->drive = drive;
-	container_size = drive->GetClustersCount()-1;
+	container_size = drive->GetClustersCount();
 }
 
 Cluster Ext4ClusterIterator::CurrentItem()
 {
-    return drive->ReadClusters(current_cluster+1, (DWORD)1);
+	return drive->ReadClusters(current_cluster+1, (DWORD)1);
 }
 
 RangeClustersDec::RangeClustersDec(ULONGLONG start_cluster, ULONGLONG stop_cluster, IndexedIterator *it)
-    :IndexedIteratorDecorator(it)
+	:IndexedIteratorDecorator(it)
 {
     this->start_cluster = start_cluster;
     this->stop_cluster = stop_cluster;

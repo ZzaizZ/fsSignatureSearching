@@ -31,6 +31,8 @@ __published:	// IDE-managed Components
 	TRadioButton *radRange;
 	TEdit *tedStartCluster;
 	TEdit *tedStopCluster;
+	TComboBox *cbFsType;
+	TLabel *lblFsType;
 	void __fastcall btnSearchClick(TObject *Sender);
 	void __fastcall vstFindingSectorsGetText(TBaseVirtualTree *Sender, PVirtualNode Node,
           TColumnIndex Column, TVSTTextType TextType, UnicodeString &CellText);

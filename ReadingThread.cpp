@@ -11,9 +11,7 @@ ReadingThread::ReadingThread(WCHAR *path, bool CreateSuspended)
 {
 	FreeOnTerminate = true;
 	error_code = 0;
-	//drive = new NtfsFS(path, &error_code);
-	//drive = new Fat32FS(path, &error_code);
-    drive = new Ext4FS(path, &error_code);
+	drive = ChoiseDriveFS(path, &error_code);
 	if (error_code != 0) {
 		WCHAR error_message[100];
 		swprintf_s(error_message, 100, L"Ошибка при открытии файловой системы: (%i)", error_code);
@@ -31,14 +29,41 @@ ReadingThread::ReadingThread(WCHAR *path, bool CreateSuspended)
 IndexedIterator* ReadingThread::ChoiseIterator()
 {
 	if (MainWindow->radAll->Checked)
-//		return new NtfsClusterIterator(drive);
-//		return new Fat32ClusterIterator(drive);
-        return new Ext4ClusterIterator(drive);
+		switch (MainWindow->cbFsType->ItemIndex)
+		{
+			case 0: return new NtfsClusterIterator(drive); break;
+			case 1: return new Fat32ClusterIterator(drive); break;
+			case 2: return new Ext4ClusterIterator(drive); break;
+            default: return NULL; break;
+		}
 	else if (MainWindow->radRange->Checked)
-		return new RangeClustersDec(StrToInt64(MainWindow->tedStartCluster->Text),
-		StrToInt64(MainWindow->tedStopCluster->Text),
-		//new NtfsClusterIterator(drive));
-		new Fat32ClusterIterator(drive));
+        switch (MainWindow->cbFsType->ItemIndex)
+		{
+			case 0: return new RangeClustersDec(StrToInt64(MainWindow->tedStartCluster->Text),
+					StrToInt64(MainWindow->tedStopCluster->Text),
+					new NtfsClusterIterator(drive));
+					break;
+			case 1: return new RangeClustersDec(StrToInt64(MainWindow->tedStartCluster->Text),
+					StrToInt64(MainWindow->tedStopCluster->Text),
+					new Fat32ClusterIterator(drive));
+					break;
+			case 2: return new RangeClustersDec(StrToInt64(MainWindow->tedStartCluster->Text),
+					StrToInt64(MainWindow->tedStopCluster->Text),
+					new Ext4ClusterIterator(drive));
+					break;
+			default: return NULL; break;
+		}
+}
+//---------------------------------------------------------------------------
+FileSystem* ReadingThread::ChoiseDriveFS(WCHAR *path, int *error_code)
+{
+	switch (MainWindow->cbFsType->ItemIndex)
+	{
+		case 0: return new NtfsFS(path, error_code); break;
+		case 1: return new Fat32FS(path, error_code); break;
+		case 2: return new Ext4FS(path, error_code); break;
+		default: return NULL; break;
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall ReadingThread::Execute()

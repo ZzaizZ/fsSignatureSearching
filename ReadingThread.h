@@ -15,7 +15,8 @@ private:
     Cluster cluster_data;
 	int error_code;
 	ULONGLONG clusters_count;
-    IndexedIterator* ChoiseIterator();
+	IndexedIterator* ChoiseIterator();
+	FileSystem* ChoiseDriveFS(WCHAR *path, int *error_code);
 protected:
 	void __fastcall Execute();
 public:
