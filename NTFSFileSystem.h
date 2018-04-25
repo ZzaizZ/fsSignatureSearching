@@ -3,6 +3,7 @@
 //---------------------------------------------------------------------------
 #include <windows.h>
 #include <vector>
+#include "Iterator.h"
 //---------------------------------------------------------------------------
 using namespace std;
 //---------------------------------------------------------------------------
@@ -21,6 +22,7 @@ public:
     virtual DWORD GetBytesPerCluster() { return bytes_per_cluster; }
     virtual Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters, int *error_code) = 0;
     virtual Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters) = 0;
+    virtual IndexedIterator* GetIterator() = 0;
     FileSystem(const WCHAR *p, int *error_code);
 };
 //------------------------------------
@@ -58,6 +60,7 @@ public:
     Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters, int *error_code);
     Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters);
 	ULONGLONG GetClustersCount();
+	IndexedIterator GetIterator() { return new NtfsClusterIterator(this); }
     ~NtfsFS() {};
 private:
 	BYTE data_buffer[512];
@@ -101,6 +104,7 @@ public:
     Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters, int *error_code);
     Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters);
     ULONGLONG GetClustersCount();
+	IndexedIterator GetIterator() { return new Fat32ClusterIterator(this); }
     ~Fat32FS() {};
 private:
     BYTE data_buffer[512];
@@ -141,6 +145,7 @@ public:
     Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters, int *error_code);
     Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters);
     ULONGLONG GetClustersCount();
+	IndexedIterator GetIterator() { return new Ext4ClusterIterator(this); }
     ~Ext4FS() {};
 private:
     BYTE data_buffer[512];
