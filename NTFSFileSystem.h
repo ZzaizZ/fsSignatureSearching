@@ -16,11 +16,15 @@ protected:
     HANDLE FsHandle() { return file_handle; }
     ULONGLONG total_clusters;
     DWORD bytes_per_cluster;
+    virtual DWORD ReadBootRecord(BYTE *data_buffer);
+
 public:
     virtual ULONGLONG GetClustersCount() = 0;
     virtual DWORD GetBytesPerCluster() { return bytes_per_cluster; }
-    virtual Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters, int *error_code) = 0;
-    virtual Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters) = 0;
+    virtual Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters, int *error_code);
+    virtual Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters);
+
+
     FileSystem(const WCHAR *p, int *error_code);
 };
 //------------------------------------
@@ -50,19 +54,19 @@ typedef struct
 
 } NTFS_BootRecord;
 #pragma pack(pop)
-
+//------------------------------------
+//          FsNTFS
+//------------------------------------
 class NtfsFS : public FileSystem
 {
 public:
     NtfsFS(const WCHAR *p, int *error_code);
-    Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters, int *error_code);
-    Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters);
 	ULONGLONG GetClustersCount();
     ~NtfsFS() {};
 private:
 	BYTE data_buffer[512];
     bool is_NTFS;
-    DWORD ReadBootRecord(BYTE *data_buffer);
+    //DWORD ReadBootRecord(BYTE *data_buffer);
     bool CheckNTFS();
     NTFS_BootRecord *mbr;
 };
@@ -98,14 +102,12 @@ class Fat32FS : public FileSystem
 {
 public:
     Fat32FS(const WCHAR *p, int *error_code);
-    Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters, int *error_code);
-    Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters);
     ULONGLONG GetClustersCount();
     ~Fat32FS() {};
 private:
     BYTE data_buffer[512];
     bool is_FAT32;
-    DWORD ReadBootRecord(BYTE *data_buffer);
+    //DWORD ReadBootRecord(BYTE *data_buffer);
     bool CheckFAT32();
     FAT32_BootRecord *mbr;
 };
@@ -138,8 +140,6 @@ class Ext4FS : public FileSystem
 {
 public:
     Ext4FS(const WCHAR *p, int *error_code);
-    Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters, int *error_code);
-    Cluster ReadClusters(ULONGLONG start_cluster, DWORD number_of_clusters);
     ULONGLONG GetClustersCount();
     ~Ext4FS() {};
 private:
