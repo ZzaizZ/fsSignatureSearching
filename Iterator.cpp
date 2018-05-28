@@ -2,6 +2,14 @@
 #include <iostream>
 
 
+bool IndexedIterator::IsDone()
+{
+	if (current_cluster >= container_size)
+		return true;
+	else
+		return false;
+}
+
 NtfsClusterIterator::NtfsClusterIterator(FileSystem *drive)
 {
 	this->drive = drive;
@@ -11,14 +19,6 @@ NtfsClusterIterator::NtfsClusterIterator(FileSystem *drive)
 Cluster NtfsClusterIterator::CurrentItem()
 {
     return drive->ReadClusters(current_cluster, (DWORD)1);
-}
-
-bool NtfsClusterIterator::IsDone()
-{
-	if (current_cluster >= container_size)
-		return true;
-	else
-		return false;
 }
 
 Fat32ClusterIterator::Fat32ClusterIterator(FileSystem *drive)

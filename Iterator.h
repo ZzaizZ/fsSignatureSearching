@@ -23,58 +23,49 @@ protected:
 class IndexedIterator : public Iterator<Cluster>
 {
 public:
-    void First() = 0;
-    void Next() = 0;
-    bool IsDone() = 0;
+    virtual void First() = 0;
+    virtual void Next() { current_cluster++; }
+    virtual bool IsDone();
     Cluster CurrentItem() = 0;
     virtual ULONGLONG CurrentIndex() = 0;
 protected:
     IndexedIterator() : Iterator<Cluster>() {};
+	ULONGLONG container_size;
+	ULONGLONG current_cluster;
 };
 
 class NtfsClusterIterator : public IndexedIterator
 {
 public:
     void First() { current_cluster = 0; }
-    void Next() { current_cluster++; }
-    bool IsDone();
     Cluster CurrentItem();
     ULONGLONG CurrentIndex() { return current_cluster; }
 	NtfsClusterIterator(FileSystem *drive);
 private:
     FileSystem *drive;
-    ULONGLONG container_size;
-    ULONGLONG current_cluster;
+
 };
 
 class Fat32ClusterIterator : public IndexedIterator
 {
 public:
     void First() { current_cluster = 1; }
-    void Next() { current_cluster++; }
-    bool IsDone() { return (current_cluster >= container_size); }
     Cluster CurrentItem();
     ULONGLONG CurrentIndex() { return current_cluster; }
     Fat32ClusterIterator(FileSystem *drive);
 private:
     FileSystem *drive;
-    ULONGLONG container_size;
-    ULONGLONG current_cluster;
 };
 
 class Ext4ClusterIterator : public IndexedIterator
 {
 public:
     void First() { current_cluster = 2; }
-    void Next() { current_cluster++; }
-    bool IsDone() { return (current_cluster >= container_size); }
     Cluster CurrentItem();
     ULONGLONG CurrentIndex() { return current_cluster; }
     Ext4ClusterIterator(FileSystem *drive);
 private:
     FileSystem *drive;
-    ULONGLONG container_size;
-    ULONGLONG current_cluster;
 };
 
 class IndexedIteratorDecorator : public IndexedIterator

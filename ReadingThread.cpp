@@ -32,7 +32,10 @@ IndexedIterator* ReadingThread::ChoiseIterator()
 		switch (MainWindow->cbFsType->ItemIndex)
 		{
 			case 0: return new NtfsClusterIterator(drive); break;
-			case 1: return new Fat32ClusterIterator(drive); break;
+			case 1: return new RangeClustersDec(1,
+												clusters_count,
+												new Fat32ClusterIterator(drive));
+					break;
 			case 2: return new Ext4ClusterIterator(drive); break;
             default: return NULL; break;
 		}
